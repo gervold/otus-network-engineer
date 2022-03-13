@@ -112,8 +112,8 @@ VPCS> ping 192.168.4.3
 
 #### Проверка "свежевоткнутых" коммутаторов
 
-По умолчанию на коммутаторах S1 и S2 подняты интерфейсы. 
-Это дает возможность попосылать пакеты через них. <br>
+По умолчанию на коммутаторах S1 и S2 интерфейсы – подняты. 
+Тоесть трафик пойдет через них сразу, без дополнительной настройки. <br>
 
 Давайте сделаем ping с PC-A на PC-B.
 
@@ -131,9 +131,9 @@ host (192.168.3.1) not reachable
 Заметим, что `not reachable` выдается в случае, если недоступен `default gateway`.
 Попробуем настроить на маршрутизаторе `default gateway`... каким-нибудь топорным способом.
 
-#### Проверка работы коммутаторов между разными сетями без VLAN и "роутера на палочке"
+#### Проверка коммутации между разными сетями (без VLAN-ов и "роутера на палочке")
 
-Временно сделаем наитупейшую схему:
+Временно сделаем тупую схему с двумя кабелями:
 ![img_7.png](img_7.png)
 
 Заметим, что, в отличии от коммутаторов, интерфейсы на роутерах выключены по умолчанию:
@@ -212,3 +212,87 @@ VPCS> ping 192.168.4.99
 192.168.4.99 icmp_seq=4 timeout
 192.168.4.99 icmp_seq=5 timeout
 ```
+
+#### Потрогаем коммутатор. Первая настройка VLAN
+
+Руки лезут на коммутатор...
+
+Поместим PC-A в отдельный VLAN, проверим изоляцию.  
+
+
+**Настраиваем S1:**
+
+По умолчанию на коммутаторе следующие предопределенные VLAN-ы:
+```
+Switch#show vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Et0/0, Et0/1, Et0/2, Et0/3
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+```
+
+Добавим VLAN и назовем его Management:
+```
+Switch#configure terminal
+Switch(config)#vlan 3
+Switch(config-vlan)#name Management
+Switch(config-vlan)#end
+```
+Привяжем порт (интерфейс) к VLAN:
+```
+Switch#configure terminal
+Switch(config)#interface Ethernet 0/3
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 3
+Switch(config-if)#end
+Switch#
+```
+Проверка, что VLAN создался и порт добавился:
+```
+Switch#show vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Et0/0, Et0/1, Et0/2
+3    Management                       active    Et0/3
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+```
+
+Теперь всё, что висит на порту e0/3 будет попадать в VLAN3 и не выходить за его пределы.
+
+Проверим, что с PC-A не можем достучаться до gateway (R3):
+```
+VPCS> show ip all
+
+NAME   IP/MASK              GATEWAY           MAC                DNS
+VPCS1  192.168.3.3/24       192.168.3.1       00:50:79:66:68:04
+
+VPCS> ping 192.168.3.1
+
+host (192.168.3.1) not reachable
+```
+
+Вернем порт в default VLAN1 и убедимся, что L2 связность восстановилась:
+```
+Switch#configure terminal
+Switch(config)#interface Ethernet 0/3
+Switch(config-if)#no switchport access vlan 3
+Switch(config-if)#end
+```
+```
+VPCS> show ip all
+NAME   IP/MASK              GATEWAY           MAC                DNS
+VPCS1  192.168.3.3/24       192.168.3.1       00:50:79:66:68:04
+
+VPCS> ping 192.168.3.1
+84 bytes from 192.168.3.1 icmp_seq=1 ttl=255 time=0.227 ms
+84 bytes from 192.168.3.1 icmp_seq=2 ttl=255 time=0.412 ms
+```
+
