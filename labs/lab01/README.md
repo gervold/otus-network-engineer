@@ -1,24 +1,39 @@
-### Configure Router-on-a-Stick Inter-VLAN Routing
+### Router-on-a-Stick Inter-VLAN Routing
 
-![img_1.png](img_1.png)
-![img_4.png](img_4.png)
-### Addressing Table
-
-![img_2.png](img_2.png)
-
-### VLAN Table
-
-![img_3.png](img_3.png)
-
-### Objectives
+### Цели
 - Part 1: Build the Network and Configure Basic Device Settings
 - Part 2: Create VLANs and Assign Switch Ports
 - Part 3: Configure an 802.1Q Trunk between the Switches
 - Part 4: Configure Inter-VLAN Routing on the Router
 - Part 5: Verify Inter-VLAN Routing is working
 
+### Реализовать схему
 
-#### Введение
+![img_19.png](router_on_a_stick_scheme.png)
+
+### Таблица адресов
+
+|Device|Interface|IP Address|Subnet Mask|Default Gateway
+|---|---|---|---|---|
+S1|VLAN3|192.168.3.11|255.255.255.0|192.168.3.1
+S2|VLAN3|192.168.3.12|255.255.255.0|192.168.3.1
+R3|e0/0.3|192.168.3.1|255.255.255.0|N/A|
+-|e0/0.4|192.168.4.1|255.255.255.0|N/A|
+-|e0/0.8|N/A|N/A|N/A|
+PC-A|NIC|192.168.3.3|255.255.255.0|192.168.3.1
+PC-B|NIC|192.168.4.3|255.255.255.0|192.168.4.1
+
+### VLAN Таблица
+
+|VLAN|Название|Связанные интерфейсы|Описание
+|---|---|---|---|
+3|Managment|S1:VLAN3, S1:e0/3, S2:VLAN3|Управление свичами и роутерами по ssh/telnet
+4|Operations|S2:VLAN4, S2:e0/2|Конечные пользователи
+7|ParkingLot|S1:e0/2, S2:e0/0,e0/3|Парковка погашенных портов, во имя security
+8|Native|N/A|Нетегированный трафик 802.1Q, by default это VLAN1
+
+
+### Введение
 
 **Коммутатор (Switch)** - используется для связи конечных **устройств** в локальной сети (LAN)<br> 
 **Маршрутизатор (Router)** - используется для связи **подсетей**<br>
@@ -33,36 +48,42 @@
 - **L3 коммутаторы** (через **SVI** (Switch VLAN Interface) шлюзы)
 - схему **Router-on-a-Stick** (роутер на палочке)
 
-#### Router-on-a-Stick
+## Router-on-a-Stick
 
-Как работает роутер "на палочке"?
+#### Как работает роутер "на палочке"?
 
-Проблема<br>
+Роутер на палочке решает проблему доступа устройств из разных VLAN-ов друг к другу.
 
-Из VLAN1 нет связи с устройствами VLAN2.
+Чуть подробнее..<br>
 
-Что это значит?<br>
+Все датаграммы из одного VLAN пересылаются (broadcast, unicast) между портами устройств 
+из этого VLAN, в том числе подключенных к разным свичам. У них нет шанса попасть на подсети из другово VLAN.
+А нам нужно обращаться к устройствам за пределами нашей LAN. А мы очень хотим.
 
-Все датаграммы из VLAN1 пересылаются (broadcast, unicast) между портами устройств 
-из VLAN1, пусть и подключенных к разным свичам. У них нет шанса попасть на подсети из другово VLAN2.
-А нам иногда нужно обращаться к устройствам за пределами нашей LAN.
+Далее настроим таблицу маршрутизации между различными VLAN, 
 
-#### Задача <br>
+но выберем **свой путь**:
 
-Настроить таблицу маршрутизации между различными VLAN.
+1) Воткнем коммутаторы и посмотрим на коммутацию, без настроек.
+2) Добавим маршрутизатор, настроим связность между сетями через `default gateway`.
+3) Посадим коммутатор S1 в VLAN, проверим, что связность провала.
+4) Сделаем кривую схему маршрутизации, без trunk, поймем что-то.
+5) Сделаем как надо.
+6) Настройки по умолчанию (шаг №0).
 
-#### Основные команды:
-`show vlan` - <br>
-`interface vlan 1` - <br>
-`interface Ethernet0/0` - <br>
-`switchport mode access` - <br>
+### Подготовка стенда
 
 #### Настройка PC-A
+
 ```
 VPCS> ip 192.168.3.3 255.255.255.0 192.168.3.1
 Checking for duplicate address...
 PC1 : 192.168.3.3 255.255.255.0 gateway 192.168.3.1
 ```
+
+<details>
+<summary> Проверка </summary>
+
 Проверка:
 ```
 VPCS> ping 192.168.3.3
@@ -86,6 +107,7 @@ LPORT       : 20000
 RHOST:PORT  : 127.0.0.1:30000
 MTU         : 1500
 ```
+</details>
 
 Default gateway пока недоступен:
 ```
@@ -93,9 +115,12 @@ VPCS> ping 192.168.3.1
 host (192.168.3.1) not reachable
 ```
 
+
 #### Настройка PC-B
 
-Аналогично:
+<details>
+<summary> Аналогично PC-A </summary>
+
 ```
 VPCS> ip 192.168.4.3 255.255.255.0 192.168.4.1
 Checking for duplicate address...
@@ -110,12 +135,14 @@ VPCS> ping 192.168.4.3
 192.168.4.3 icmp_seq=5 ttl=64 time=0.001 ms
 ```
 
-#### Проверка "свежевоткнутых" коммутаторов
+</details>
+
+### 1. Проверка "свежевоткнутых" коммутаторов
 
 По умолчанию на коммутаторах S1 и S2 интерфейсы – подняты. 
 Тоесть трафик пойдет через них сразу, без дополнительной настройки. <br>
 
-![img_18.png](img_18.png)
+![img_18.png](test_switches.png)
 
 Давайте сделаем ping с PC-A на PC-B и посмотрим, что датаграммы идут.
 
@@ -126,17 +153,18 @@ host (192.168.3.1) not reachable
 ```
 
 можно видеть, что на интерфейс PC-B `eth0`, через через S1 и S2, дошли ARP-бродкасты с просьбой вернуть gateway:
-![img_6.png](img_6.png)
+![img_6.png](switches_wireshark.png)
 
 Пакеты долетели без всяких IP-шников и настроек комммутаторов.
 
 Заметим, что `not reachable` выдается в случае, если недоступен `default gateway`.<br>
 Далее попробуем настроить на маршрутизаторе `default gateway`... каким-нибудь топорным способом.
 
-#### Проверка коммутации между разными сетями (без настройки VLAN-ов и "роутера на палочке")
+### 2. Проверка коммутации между разными сетями (без настройки VLAN-ов и "роутера на палочке")
 
-Временно сделаем тупую схему с двумя кабелями:
-![img_17.png](img_17.png)
+Начинаем велосипедить. Потому что можем.<br>
+Временно сделаем схему с двумя кабелями: <br>
+![img_17.png](simple_routing.png)
 
 Заметим, что, в отличии от коммутаторов, интерфейсы на роутерах выключены по умолчанию:
 ```
@@ -147,7 +175,7 @@ Ethernet0/0 is administratively down, line protocol is down
   ***
 ```
 
-Добавим на один интерфейс две подсети:
+Добавим на интерфесы две подсети:
 ```
 Router#configure terminal
 
@@ -161,8 +189,9 @@ Router(config-if)#ip address 192.168.4.1 255.255.255.0
 Router(config-if)#no shutdown
 Router(config-if)#end
 ```
+<details>
+<summary> Проверка доступности <b>default gateway</b> и компа PC-B: </summary>
 
-Проверка доступности `default gateway` и компа PC-B:
 ```
 VPCS> show ip all
 
@@ -185,6 +214,7 @@ VPCS> ping 192.168.4.3
 84 bytes from 192.168.4.3 icmp_seq=4 ttl=63 time=0.585 ms
 84 bytes from 192.168.4.3 icmp_seq=5 ttl=63 time=1.144 ms
 ```
+</details>
 
 Заметим, что если недоступный хост в пределах LAN, то мы получим `not reachable`:
 
@@ -199,7 +229,7 @@ VPCS> ping 192.168.3.99
 host (192.168.3.99) not reachable
 ```
 
-Если же недоступный хост находится в другом LAN, то мы получим 'timeout' 
+Если же недоступный хост находится в другом LAN, то мы получим `timeout` 
 ```
 VPCS> show ip all
 
@@ -215,13 +245,13 @@ VPCS> ping 192.168.4.99
 192.168.4.99 icmp_seq=5 timeout
 ```
 
-#### Потрогаем коммутатор. Первая настройка VLAN
+### 3. Потрогаем за коммутатор. Первый VLAN
 
-Руки лезут на коммутатор...
+Чешем руки об коммутатор... Первые настройки коммутатора.
 
-Поместим PC-A в отдельный VLAN, проверим, что хост попал в "изоляцию".  
+Поместим PC-A в отдельный VLAN, проверим, что хост попал в изоляцию.  
 
-![img_16.png](img_16.png)
+![img_16.png](first_VLAN.png)
 
 **Настраиваем S1:**
 
@@ -238,14 +268,14 @@ VLAN Name                             Status    Ports
 1005 trnet-default                    act/unsup
 ```
 
-Добавим Management VLAN:
+Добавим, для теста, Management VLAN:
 ```
 Switch#configure terminal
 Switch(config)#vlan 3
 Switch(config-vlan)#name Management
 Switch(config-vlan)#end
 ```
-Привяжем порт (интерфейс) к VLAN:
+Командой `switchport` привяжем порт коммутатора (интерфейс) к VLAN:
 ```
 Switch#configure terminal
 Switch(config)#interface Ethernet 0/3
@@ -254,7 +284,10 @@ Switch(config-if)#switchport access vlan 3
 Switch(config-if)#end
 Switch#
 ```
-Проверка, что VLAN создался и порт добавился:
+
+<details>
+<summary> Проверка, что VLAN создался и порт добавился: </summary>
+
 ```
 Switch#show vlan brief
 
@@ -267,6 +300,8 @@ VLAN Name                             Status    Ports
 1004 fddinet-default                  act/unsup
 1005 trnet-default                    act/unsup
 ```
+
+</details>
 
 Теперь всё, что висит на порту e0/3 будет попадать в VLAN3 и не выходить за его пределы.
 
@@ -300,15 +335,15 @@ VPCS> ping 192.168.3.1
 ```
 
 
-#### Настройка маршрутизации между VLAN (без trunk)
+### 4. Настройка маршрутизации между VLAN (без trunk)
 
 Усложним схему, добавив к коммутатору S2 хост PC-C из VLAN3, чтобы на S2 были хосты с разных VLAN-ов.
 Для настроики маршрутизации между VLAN3 и VALN4 через R3 
 организуем L2-связность с R3:
-- добавим провода;
-- выделим порты, для этого придется поменять коммутатор S1, на S4 – коммутатор с большим числом портов.
+- поменяем коммутатор S1 на S4, чтобы увеличить число портов;
+- протянем провода.
 
-![img_14.png](img_14.png)
+![img_14.png](not_good.png)
 
 С увеличением числа портов становится удобно использовать диапозоны портов `interface range` для объединения их в VLAN-ы<br>
 **S4:**
@@ -346,7 +381,10 @@ VLAN Name                             Status    Ports
 ```
 S2 – аналогично. 
 
-На R3 проверяем привязку IP к портам на соответствие схеме:
+<details>
+
+<summary>На R3 проверяем привязку IP к интерфейсам на соответствие схеме:</summary>
+
 ```
 Router#show ip interface brief
 Interface                  IP-Address      OK? Method Status                Protocol
@@ -355,6 +393,7 @@ Ethernet0/1                192.168.3.1     YES manual up                    up
 Ethernet0/2                unassigned      YES unset  administratively down down
 Ethernet0/3                unassigned      YES unset  administratively down down
 ```
+</details>
 
 Тест с PC-C:
 ```
@@ -373,28 +412,21 @@ VPCS> ping 192.168.4.3
 для включения каждого нового VLAN требуется выделять порты/обновлять оборудование и прокладывать L2-каналы связности до маршрутизатора.
 
 
-#### Настройка маршрутизации с использованием trunk
+### 5. Настройка маршрутизации с использованием trunk
 
 Для масштабирования и упрощения схемы из предыдущего подхода воспользуемся агрегацией нескольких VLAN внутрь одного.
-Для этого создадим VLAN-магистраль или транк (trunk).
+Для этого создадим **VLAN-магистраль** или транк (**trunk**).
 
-В случае транка несколько(все) VLAN будут проходить через один порт.
-VLAN1 (default) является транком.
+В случае транка **все VLAN будут проходить через один порт**.<br>
+_Заметим, что по умолчанию VLAN1 (default) уже является транком._
 
 Соберем заявленную схему:
 
-|VLAN|Название|Связанные интерфейсы|Описание
-|---|---|---|---|
-3|Managment|.|Управление свичами и роутерами по ssh/telnet
-4|Operations|.|Конечные пользователи
-7|ParkingLot|.|Склад для погашенных портов, всё ради безопасности
-8|Native|.|Нетегированный трафик 802.1Q, by default это VLAN1
-
-![img_8.png](img_8.png)
+![img_ololo](router_on_a_stick_scheme.png)
 
 
 
-Объединим подсети на R1:
+Объединим подсети на R3:
 ```
 Router#configure terminal
 Router(config)#interface Ethernet0/0.3
@@ -419,7 +451,7 @@ Router(config-if)#no shutdown
 Router(config-if)#end
 ```
 
-На свиче в транке разрешаем только используемые сети 3,4,8.
+На свиче в транке разрешаем только используемые сети 3,4,8.<br>
 Parking (vlan 7) должна быть зафильтрована.
 
 S1:
@@ -467,7 +499,33 @@ VLAN Name                             Status    Ports
 1005 trnet-default                    act/unsup
 ```
 
-S2:
+и добавим IP-адрес на коммутатор:
+
+S1:
+```
+S1#configure terminal
+S1(config)#interface vlan 3
+S1(config-if)#ip address 192.168.3.11 255.255.255.0
+S1(config-if)#no shutdown
+*Mar 13 13:40:42.838: %LINK-3-UPDOWN: Interface Vlan3, changed state to up
+*Mar 13 13:40:43.842: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan3, changed state to up
+*Mar 13 13:40:46.565: %SYS-5-CONFIG_I: Configured from console by console
+S1(config-if)#end
+```
+
+```
+S1#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            unassigned      YES unset  up                    up
+Ethernet0/1            unassigned      YES unset  up                    up
+Ethernet0/2            unassigned      YES unset  up                    up
+Ethernet0/3            unassigned      YES unset  up                    up
+Vlan3                  192.168.3.11    YES manual up                    up
+```
+
+<details>
+<summary> Аналогично делаем на S2 </summary>
+
 ```
 Switch#configure terminal
 Switch(config)#hostname S2
@@ -516,6 +574,8 @@ VLAN Name                             Status    Ports
 1005 trnet-default                    act/unsup
 ```
 
+</details>
+
 Проверка с PC-A:
 ```
 VPCS> show ip all
@@ -554,7 +614,87 @@ VPCS> ping 192.168.3.3
 ^C
 ```
 
-TODO:
-Добавить IP-ки для коммутаторов.
 Описание: VTP<br>
 Описание: DTP<br>
+
+#### Базовые настройки
+Для маршрутизатора
+```
+Router>enable
+Router#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname R3
+R3(config)#no ip domain-lookup
+R3(config)#enable secret class
+R3(config)#line console 0
+R3(config-line)#password cisco
+R3(config-line)#login
+R3(config-line)#line vty 0 4
+R3(config-line)#password cisco
+R3(config-line)#login
+R3(config-line)#service password-encryption
+R3(config)#banner motd ^
+Enter TEXT message.  End with the character '^'.
+##########################################
+#                                        #
+#        Authorised Access Only          #
+#                                        #
+##########################################
+
+^
+R3(config)#end
+R3#
+*Mar 27 17:06:22.033: %SYS-5-CONFIG_I: Configured from console by console
+```
+
+Для коммутатора:
+```
+Switch>enable
+Switch#configure terminal
+Switch(config)#hostname S1
+S1(config)#no ip domain-lookup
+S1(config)#enable secret class
+S1(config)#line console 0
+S1(config-line)#password cisco
+S1(config-line)#login
+S1(config-line)#line vty 0 4
+S1(config-line)#password cisco
+S1(config-line)#login
+S1(config-line)#service password-encryption
+S1(config)#banner motd ^
+Enter TEXT message.  End with the character '^'.
+##########################################
+#                                        #
+#        Authorised Access Only          #
+#                                        #
+##########################################
+^
+S1(config)#end
+```
+После введенных настроек, **при подключении**, нас будет встречать приветствие и
+<details>
+<summary>требование ввести пароль</summary>
+
+```
+##########################################
+#                                        #
+#        Authorised Access Only          #
+#                                        #
+##########################################
+
+
+
+User Access Verification
+
+Password:
+```
+</details>
+
+<details>
+<summary>и при входе <b>в защищенный режим</b> – тоже попросят пароль:</summary>
+
+```
+R1>enable
+Password:
+```
+</details>
