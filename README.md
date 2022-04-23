@@ -1,2 +1,8 @@
-# otus-network-engineer
-Laboratory works on the course "Network Engineer"
+# Network Engineer
+Лабораторные работы, курсовая и дополнительные материалы по курсу OTUS "Network Engineer".
+
+ - [Практические работы](labs/)
+ - [Курсовая работа](diplom/)
+ - [Дополнительные лекции и материалы](other/)
+ - [Разное про EVE-NG](eve-ng/)
+
