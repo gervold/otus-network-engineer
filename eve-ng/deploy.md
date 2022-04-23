@@ -208,16 +208,16 @@ ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a export -F $LAB_FILE -T 0"
 
 ### Использование:
 
-Редактирование (в моем случае через Pycharm):
+1. Скачивание с eve-ng стенда:  
+![img_1.png](deploy/img/img___2.png)
+
+2. Редактирование (в моем случае через Pycharm):
 ![img_4.png](deploy/img/img__4.png)
 
-Коммит на github:
-![img.png](deploy/img/img__.png)
-
-Разливка на eve-ng:  
+3. Разливка на eve-ng:  
 ![img.png](deploy/img/img___1.png)
 
-Скачивание с eve-ng стенда:  
-![img_1.png](deploy/img/img___2.png)
+4. Коммит на github:
+![img.png](deploy/img/img__.png)
 
 Как-то так :)
