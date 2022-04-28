@@ -5,7 +5,7 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname Router
+hostname R25
 !
 boot-start-marker
 boot-end-marker
