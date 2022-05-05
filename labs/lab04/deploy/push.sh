@@ -24,6 +24,7 @@ do
   scp $src $dst
   echo "delete nvram for ${device} device"
   ssh $USER@$HOST "rm $LAB_TMP_PATH/$device/nvram_*"
+  ssh $USER@$HOST "[[ -f $LAB_TMP_PATH/$device/startup.vpc ]] && cp $LAB_TMP_PATH/$device/startup-config $LAB_TMP_PATH/$device/startup.vpc"
 done
 
 echo "start all devices"
