@@ -64,12 +64,10 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 52.0.3.28 255.255.255.0
- shutdown
 !
 interface Ethernet0/1
  no shutdown
  ip address 52.0.4.28 255.255.255.0
- shutdown
 !
 interface Ethernet0/2
  no shutdown
