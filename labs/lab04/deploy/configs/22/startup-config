@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 19:52:20 EET Sun Apr 17 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -65,18 +63,15 @@ redundancy
 !
 interface Ethernet0/0
  no shutdown
- no ip address
- shutdown
+ ip address 101.0.0.22 255.255.255.0
 !
 interface Ethernet0/1
  no shutdown
- no ip address
- shutdown
+ ip address 192.168.0.22 255.255.255.0
 !
 interface Ethernet0/2
  no shutdown
- no ip address
- shutdown
+ ip address 52.0.0.22 255.255.255.0
 !
 interface Ethernet0/3
  no shutdown
