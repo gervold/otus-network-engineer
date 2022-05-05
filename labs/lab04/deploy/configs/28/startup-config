@@ -63,18 +63,17 @@ redundancy
 !
 interface Ethernet0/0
  no shutdown
- no ip address
+ ip address 52.0.3.28 255.255.255.0
  shutdown
 !
 interface Ethernet0/1
  no shutdown
- no ip address
+ ip address 52.0.4.28 255.255.255.0
  shutdown
 !
 interface Ethernet0/2
  no shutdown
- no ip address
- shutdown
+ ip address 30.0.0.1 255.255.255.0
 !
 interface Ethernet0/3
  no shutdown
