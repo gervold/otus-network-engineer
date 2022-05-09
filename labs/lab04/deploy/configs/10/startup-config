@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:24:52 EET Sun Apr 17 2022
+! Last configuration change at 00:53:07 EET Sun May 8 2022
 !
 version 15.2
 service timestamps debug datetime msec
@@ -26,6 +26,7 @@ clock timezone EET 2 0
 !
 !
 ip cef
+ipv6 unicast-routing
 no ipv6 cef
 !
 !
