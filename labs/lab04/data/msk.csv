@@ -1,0 +1,27 @@
+Device,Port,IPv4,IPv6,VLAN,Link,Comment
+VPC1,eth0,100.0.0.1,2001:1001:1:3::1,-,VPC1 eth0 - e0/2 SW3,
+VPC7,eth0,100.0.1.7,2001:1001:2:7::2,-,VPC7 eth0 - e0/2 SW2,
+SW2,,172.16.0.2,"",1100,,Management
+SW2,e0/2,,,70,SW2 e0/2 - eth0 VPC7,End Users
+SW3,,172.16.0.3,"",1100,,Management
+SW3,e0/2,,,10,SW3 e0/2 - eth0 VPC1,End Users
+SW4,,172.16.0.4,"",1100,,Management
+SW5,,172.16.0.5,"",1100,,Management
+R12,e0/0,,,-,R12 e0/0 - e1/0 SW4,Connectivity
+R12,e0/1,,,-,R12 e0/1 - e1/1 SW5,Robustness
+R12,e0/2,10.0.2.12,2001:0:12:14::1,-,R12 e0/2 - e0/0 R14,Connectivity
+R12,e0/3,10.0.1.12,2001:0:12:15::1,-,R12 e0/3 - e0/1 R15,Robustness
+R13,e0/0,,,-,R13 e0/0 - e1/0 SW5,Connectivity
+R13,e0/1,,,-,R13 e0/1 - e1/1 SW4,Robustness
+R13,e0/2,10.0.2.13,2001:0:13:15::1,-,R13 e0/2 - e0/0 R15,Connectivity
+R13,e0/3,10.0.1.13,2001:0:13:14::1,-,R13 e0/3 - e0/1 R14,Robustness
+R14,e0/0,10.0.2.14,2001:0:12:14::2,-,R14 e0/0 - e0/2 R12,Connectivity
+R14,e0/1,10.0.1.14,2001:0:13:14::2,-,R14 e0/1 - e0/3 R13,Robustness
+R14,e0/2,101.0.0.14,2001:1001:14:22::1,-,R14 e0/2 - e0/0 R22,BGP: Provider link
+R14,e0/3,10.0.3.14,2001:0:14:19::1,-,R14 e0/3 - e0/0 R19,Default (OSPF)
+R15,e0/0,10.0.2.15,2001:0:13:15::2,-,R15 e0/0 - e0/2 R13,Connectivity
+R15,e0/1,10.0.1.15,2001:0:12:15::2,-,R15 e0/1 - e0/3 R12,Robustness
+R15,e0/2,30.0.0.15,2001:1001:15:21::1,-,R15 e0/2 - e0/0 R21,BGP: Provider link
+R15,e0/3,10.0.3.15,2001:0:15:20::1,-,R15 e0/3 - e0/0 R20,Default (OSPF)
+R19,e0/0,10.0.3.19,2001:0:14:19::2,-,R19 e0/0 - e0/3 R14,Default (OSPF)
+R20,e0/0,10.0.3.20,2001:0:15:20::2,-,R20 e0/0 - e0/3 R15,Default (OSPF)

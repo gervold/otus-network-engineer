@@ -1,0 +1,4 @@
+Device Name,Port,IPv4,IPv6,VLAN,Link,Comment
+R21,e0/0,30.0.0.21,2001:301:15:21::2,-,R21 e0/0 – e0/2 R15,BGP: Customer link
+R21,e0/1,192.168.0.21,2001:0:21:22::1,-,R21 e0/1 – e0/1 R22,BGP: Peering link
+R21,e0/2,52.0.0.21,2001:520:21:24::1,-,R21 e0/2 – e0/0 R24,BGP: Provider link
