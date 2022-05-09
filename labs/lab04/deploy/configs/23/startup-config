@@ -33,6 +33,7 @@ mmi snmp-timeout 180
 !
 !
 ip cef
+ipv6 unicast-routing
 no ipv6 cef
 !
 multilink bundle-name authenticated
@@ -64,14 +65,20 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 52.0.0.23 255.255.255.0
+ ipv6 address 2001:520:22:23::2/64
+ ipv6 address FE80::23 link-local
 !
 interface Ethernet0/1
  no shutdown
  ip address 10.0.1.23 255.255.255.0
+ ipv6 address 2001:0:23:25::1/64
+ ipv6 address FE80::23 link-local
 !
 interface Ethernet0/2
  no shutdown
  ip address 10.0.0.23 255.255.255.0
+ ipv6 address 2001:0:23:24::1/64
+ ipv6 address FE80::23 link-local
 !
 interface Ethernet0/3
  no shutdown
