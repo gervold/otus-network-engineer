@@ -72,7 +72,7 @@ interface Ethernet0/0.70
  encapsulation dot1Q 70
  ip address 100.0.1.1 255.255.255.0
  ipv6 address FE80::13 link-local
- ipv6 address 2001:1001:0:13::1/64
+ ipv6 address 2001:1001:0:101::13/64
 !
 interface Ethernet0/1
  no shutdown
@@ -83,7 +83,7 @@ interface Ethernet0/1.10
  encapsulation dot1Q 10
  ip address 100.0.0.3 255.255.255.0
  ipv6 address FE80::13 link-local
- ipv6 address 2001:0:4:13::2/64
+ ipv6 address 2001:1001:0:100::13/64
 !
 interface Ethernet0/2
  no shutdown
