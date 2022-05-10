@@ -65,8 +65,8 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 52.0.5.27 255.255.255.0
- ipv6 address 2001:520:25:27::2/64
  ipv6 address FE80::27 link-local
+ ipv6 address 2001:520:25:27::2/64
 !
 interface Ethernet0/1
  no shutdown

@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:24:33 EET Sun Apr 17 2022
+! Last configuration change at 20:49:03 EET Tue May 10 2022
 !
 version 15.2
 service timestamps debug datetime msec
@@ -75,6 +75,7 @@ line con 0
  logging synchronous
 line aux 0
 line vty 0 4
+ login
 !
 !
 end
