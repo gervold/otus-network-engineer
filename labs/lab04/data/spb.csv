@@ -2,10 +2,10 @@ Device,Port,IPv4,IPv6,VLAN,Link,Comment
 VPC8,eth0,200.0.0.8,2001:2042:8:9::1,80,VPC8 eth0 – e0/2 SW9,
 VPC11,eth0,200.0.1.11,2001:2042:10:11::2,110,VPC11 eth0 – e0/2 SW10,
 SW9,,172.16.0.9,,1100,,Management
-SW9,e0/2,200.0.0.1,2001:2042:8:9::2,80,SW9 e0/2 - eth0 VPC8,End Users
+SW9,e0/2,200.0.0.1,2001:2042:8:9::2,80,SW9 e0/2 - eth0 VPC8,Developers (VLAN)
 SW9,,10.0.1.9,2001:0:9:17::1,-,SW9 e0/3 - e0/0 R17,End Users
 SW10,,172.0.0.10,,1100,,Management
-SW10,e0/2,200.0.1.1,2001:2042:10:11::1,110,SW10 e0/2 - eth0 VPC11,Management
+SW10,e0/2,200.0.1.1,2001:2042:10:11::1,110,SW10 e0/2 - eth0 VPC11,Sales (VLAN)
 SW10,,10.0.0.10,2001:0:10:16::1,-,SW10 e0/3-e0/0 R16,End Users
 R16,e0/0,10.0.0.16,2001:0:10:16::2,-,R16 e0/0 – e0/3 SW10,Connectivity
 R16,e0/1,10.0.1.16,2001:0:16:18::1,-,R16 e0/1 – e0/0 R18,Connectivity
