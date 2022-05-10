@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 21:03:48 EET Tue May 10 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -65,24 +67,36 @@ redundancy
 interface Ethernet0/0
  no shutdown
  no ip address
- shutdown
+!
+interface Ethernet0/0.10
+ no shutdown
+ encapsulation dot1Q 10
+ ip address 100.0.0.1 255.255.255.0
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:1001:0:12::1/64
 !
 interface Ethernet0/1
  no shutdown
  no ip address
- shutdown
+!
+interface Ethernet0/1.70
+ no shutdown
+ encapsulation dot1Q 70
+ ip address 100.0.1.3 255.255.255.0
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:0:5:12::2/64
 !
 interface Ethernet0/2
  no shutdown
  ip address 10.0.2.12 255.255.255.0
- ipv6 address 2001:0:12:14::1/64
  ipv6 address FE80::12 link-local
+ ipv6 address 2001:0:12:14::1/64
 !
 interface Ethernet0/3
  no shutdown
  ip address 10.0.1.12 255.255.255.0
- ipv6 address 2001:0:12:15::1/64
  ipv6 address FE80::12 link-local
+ ipv6 address 2001:0:12:15::1/64
 !
 interface Ethernet1/0
  no shutdown
