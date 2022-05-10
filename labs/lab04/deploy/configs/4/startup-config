@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 20:48:29 EET Tue May 10 2022
+! Last configuration change at 22:54:33 EET Tue May 10 2022
 !
 version 15.2
 service timestamps debug datetime msec
@@ -96,10 +96,12 @@ interface Ethernet1/3
  no shutdown
  shutdown
 !
-interface Vlan1
+interface Vlan1000
  no shutdown
- ip address 100.0.0.4 255.255.255.0
+ ip address 172.16.0.4 255.255.255.0
+ ipv6 address 2001:1001:0:172::4/64
 !
+ip default-gateway 172.16.0.1
 ip forward-protocol nd
 !
 no ip http server
