@@ -1,0 +1,2 @@
+Device Name,Port,IPv4,IPv6,VLAN,Link,Comment
+R27,e0/0,52.0.5.27,2001:520:25:27::2,-,R27 e0/0 – e0/1 R25,Default
