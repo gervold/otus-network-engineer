@@ -52,10 +52,10 @@ def generate_ipv6(ipv4, provider_asn, link):
     return ipv6, link_local
 ```
 
-К сожалению полностью автоматизировать ~~пока~~ не удалось и потом пришлось незначительно править выданные адреса руками.
+К сожалению полностью автоматизировать ~~пока~~ не удалось и пришлось незначительно править выданные адреса руками.
 
 **Link-local** адреса будем выделять из `FE80::/10` по номеру устройства.  
-Например: для R22 адрес будет `FE80::22`.
+Например для R22 адрес будет `FE80::22`.
 
 Для конвертатции CSV в Markdown удобно использовать [конвертер Markdown в CSV](https://tableconvert.com/markdown-to-csv) 
 [и обратно](https://www.convertcsv.com/csv-to-markdown.htm)
@@ -68,9 +68,9 @@ def generate_ipv6(ipv4, provider_asn, link):
 - [Вдохновение можно поискать в СДСМ](https://linkmeup.ru/blog/1188/). Примеры L1, L2, L3 документации.
 
 
-### Таблицы IP адресов
+## Таблицы IP адресов
 
-Далее распределим адреса по офисам.
+Далее распишем IP адреса по офисам.
 
 ### Москва (AS1001)
 
@@ -217,9 +217,18 @@ access layer.
 |VPC31      |eth0|5.0.0.31  |2001:0:29::31                           |310 |VPC31 eth0 – e0/1 SW29|                  |
 
 
-#### Итоговая схема:
+## Итоговая схема
 
-![img_3.png](img_3.png)
+![ip_design.png](ip_design.png)
+
+
+## Примеры конфигураций
+
+Конфиги [тут](https://github.com/gervold/otus-network-engineer/tree/main/labs/lab04/deploy/configs).
+
+При настройке использовались скрипты для синхронизации EVE-NG конфигов, поэтому можно [посмотреть](https://github.com/gervold/otus-network-engineer/commits) историю изменения для каждого конфига.
+
+Про синхронизацию EVE-NG и git, а так же готовые скрипты [тут](https://github.com/gervold/otus-network-engineer/blob/main/eve-ng/deploy.md).
 
 ### Заметки:
 
