@@ -7,6 +7,25 @@
 - Организивать загрузку конфигов с локального компьютера на стенд. Устройства EVE-NG должны загружатся с этих конфигов.
 WEB-интерфейс EVE-NG должен отображать изменения в этих конфигах.
 
+<details>
+<summary>Сразу спойлер, что получилось</summary>
+
+### Usage:
+
+1. Скачивание конфигов с eve-ng стенда:  
+![img_1.png](deploy/img/img___2.png)
+
+2. Редактирование (в моем случае через IDE Pycharm):
+![img_4.png](deploy/img/img__4.png)
+
+3. Разливка на eve-ng:  
+![img.png](deploy/img/img___1.png)
+4. Коммит в git и публикация на github:
+![img222.png](deploy/img/img222.png)
+5. История изменения конфигураций 
+![img111.png](deploy/img/img111.png)
+</details>
+
 ### План достижения:
 
 1. Добавить в лабу устройства и настроить их для загрузки со startup-config. Отобразить startup-config'и для всех устройств.
@@ -133,10 +152,18 @@ pull.sh
 HOST=$1
 USER='root'  #auth by cert
 LAB_PATH='/opt/unetlab/tmp/0/d93fe442-2cfb-4fc7-bc19-0f374a2d3962'
+LAB_FILE='/opt/unetlab/labs/lab04/ip.unl'
 
 #root@eve-ng:/opt/unetlab/tmp/0/d93fe442-2cfb-4fc7-bc19-0f374a2d3962# ls
 #1  10  11  12  13  14  15  16  17  18  19  2  20  21  22  23  24  25  26  27  28  29  3  30  31  32  4  5  7  8  9
 devices=(1  10  11  12  13  14  15  16  17  18  19  2  20  21  22  23  24  25  26  27  28  29  3  30  31  32  4  5  7  8  9)
+
+echo "export configs"
+ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a export -F $LAB_FILE -T 0"
+
+echo "wipe and start all devices. It's need for saving fresh startup-configs"
+ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a wipe -F $LAB_FILE -T 0"
+ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a start -F $LAB_FILE -T 0"
 
 for device in ${devices[*]}
 do
@@ -200,6 +227,7 @@ do
   scp $src $dst
   echo "delete nvram for ${device} device"
   ssh $USER@$HOST "rm $LAB_TMP_PATH/$device/nvram_*"
+  ssh $USER@$HOST "[[ -f $LAB_TMP_PATH/$device/startup.vpc ]] && cp $LAB_TMP_PATH/$device/startup-config $LAB_TMP_PATH/$device/startup.vpc"
 done
 
 echo "start all devices"
@@ -208,19 +236,5 @@ ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a start -F $LAB_FILE -T 0"
 echo "export new configs"
 ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a export -F $LAB_FILE -T 0"
 ```
-
-### Использование:
-
-1. Скачивание с eve-ng стенда:  
-![img_1.png](deploy/img/img___2.png)
-
-2. Редактирование (в моем случае через Pycharm):
-![img_4.png](deploy/img/img__4.png)
-
-3. Разливка на eve-ng:  
-![img.png](deploy/img/img___1.png)
-
-4. Коммит на github:
-![img.png](deploy/img/img__.png)
 
 Как-то так :)
