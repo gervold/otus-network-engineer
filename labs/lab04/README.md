@@ -36,7 +36,10 @@
 
 **IPv6** адреса будем генерировать, на основе на основе линков устройств (взяты из схемы лабораторной работы) и назначенных на предыдущем шаге IPv4 адреса.  
 
-По правилу, описаному на языке python в `data/gen_ipv6.py`:
+По правилу, описаному на языке python в `data/gen_ipv6.py`.
+<details>
+
+<summary> попытка генерации IPv6 </summary>
 
 ```python
 def generate_ipv6(ipv4, provider_asn, link):
@@ -51,17 +54,17 @@ def generate_ipv6(ipv4, provider_asn, link):
     link_local = "FE80::" + d
     return ipv6, link_local
 ```
+</details>
 
-К сожалению полностью автоматизировать ~~пока~~ не удалось и пришлось незначительно править выданные адреса руками.
+К сожалению полностью автоматизировать ~~пока~~ не удалось, в итоге пришлось незначительно править выданные адреса вручную.
 
 **Link-local** адреса будем выделять из `FE80::/10` по номеру устройства.  
 Например для R22 адрес будет `FE80::22`.
 
-Для конвертатции CSV в Markdown удобно использовать [конвертер Markdown в CSV](https://tableconvert.com/markdown-to-csv) 
-[и обратно](https://www.convertcsv.com/csv-to-markdown.htm)
-
 
 #### Полезные ссылки:
+- [хороший конвертер Markdown в CSV](https://tableconvert.com/markdown-to-csv) 
+- [хороший конвертер CSV в Markdown](https://www.convertcsv.com/csv-to-markdown.htm)
 - [RFC1918. Про выделение IPv4-адресов для приватных сетей](https://datatracker.ietf.org/doc/html/rfc1918)
 - [RFC3021. Using 31-bit prefixes on IPv4 PTP Links](https://datatracker.ietf.org/doc/html/rfc3021). Сокращение кол-ва используемых IP.
 - [RFC3849. Про использование 2001:DB8::/32 для документации](https://datatracker.ietf.org/doc/html/rfc3849)
