@@ -34,7 +34,7 @@
 
 ### Генерация IPv6 адресов
 
-**IPv6** адреса будем генерировать, на основе на основе линков устройств (взяты из схемы лабораторной работы) и назначенных на предыдущем шаге IPv4 адреса.  
+**IPv6** адреса будем генерировать, на основе на основе линков устройств (взяты из схемы лабораторной работы) и назначенных на предыдущем шаге IPv4 адресов.  
 
 По правилу, описаному на языке python в `data/gen_ipv6.py`.
 <details>
@@ -63,12 +63,12 @@ def generate_ipv6(ipv4, provider_asn, link):
 
 
 #### Полезные ссылки:
-- [хороший конвертер Markdown в CSV](https://tableconvert.com/markdown-to-csv) 
-- [хороший конвертер CSV в Markdown](https://www.convertcsv.com/csv-to-markdown.htm)
 - [RFC1918. Про выделение IPv4-адресов для приватных сетей](https://datatracker.ietf.org/doc/html/rfc1918)
 - [RFC3021. Using 31-bit prefixes on IPv4 PTP Links](https://datatracker.ietf.org/doc/html/rfc3021). Сокращение кол-ва используемых IP.
 - [RFC3849. Про использование 2001:DB8::/32 для документации](https://datatracker.ietf.org/doc/html/rfc3849)
 - [Вдохновение можно поискать в СДСМ](https://linkmeup.ru/blog/1188/). Примеры L1, L2, L3 документации.
+- [хороший конвертер Markdown в CSV](https://tableconvert.com/markdown-to-csv) 
+- [хороший конвертер CSV в Markdown](https://www.convertcsv.com/csv-to-markdown.htm)
 
 
 ## Таблицы IP адресов
@@ -90,14 +90,14 @@ access layer.
 
 |Device|Port|IPv4      |IPv6                                    |VLAN|Link              |Comment           |
 |------|----|----------|----------------------------------------|----|------------------|------------------|
-|VPC1  |eth0|100.0.0.1 |2001:1001:1:3::1                        |-   |VPC1 eth0 - e0/2 SW3|                  |
-|VPC7  |eth0|100.0.1.7 |2001:1001:2:7::2                        |-   |VPC7 eth0 - e0/2 SW2|                  |
-|SW2   |    |172.16.0.2|2001:1001:0:172::2                      |1000|                  |Management (VLAN) |
-|SW2   |e0/2|-         |-                                       |70  |SW2 e0/2 - eth0 VPC7|Accounting (VLAN) |
-|SW3   |    |172.16.0.3|2001:1001:0:172::3                      |1000|                  |Management (VLAN) |
-|SW3   |e0/2|-         |-                                       |10  |SW3 e0/2 - eth0 VPC1|General (VLAN)    |
-|SW4   |    |172.16.0.4|2001:1001:0:172::4                      |1000|                  |Management        |
-|SW5   |    |172.16.0.5|2001:1001:0:172::5                      |1000|                  |Management        |
+|VPC1  |eth0|100.0.0.1 |2001:1001:1:3::1                        |-   |VPC1 eth0 - e0/2 SW3|                 |
+|VPC7  |eth0|100.0.1.7 |2001:1001:2:7::2                        |-   |VPC7 eth0 - e0/2 SW2|                 |
+|SW2   |    |172.16.0.2|2001:1001:0:172::2                      |1000|                  |Management (VLAN)  |
+|SW2   |e0/2|-         |-                                       |70  |SW2 e0/2 - eth0 VPC7|Accounting (VLAN)|
+|SW3   |    |172.16.0.3|2001:1001:0:172::3                      |1000|                  |Management (VLAN)  |
+|SW3   |e0/2|-         |-                                       |10  |SW3 e0/2 - eth0 VPC1|General (VLAN)   |
+|SW4   |    |172.16.0.4|2001:1001:0:172::4                      |1000|                  |Management (VLAN)  |
+|SW5   |    |172.16.0.5|2001:1001:0:172::5                      |1000|                  |Management (VLAN)  |
 |R12   |e0/0|100.0.0.1 |2001:1001:4:12::2                       |-   |R12 e0/0 - e1/0 SW4|Connectivity      |
 |R12   |e0/1|100.0.1.3 |2001:1001:5:12::2                       |-   |R12 e0/1 - e1/1 SW5|Robustness        |
 |R12   |e0/2|10.0.2.12 |2001:0:12:14::1                         |-   |R12 e0/2 - e0/0 R14|Connectivity      |
