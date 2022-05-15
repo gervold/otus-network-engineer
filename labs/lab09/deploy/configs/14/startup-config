@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 15:35:59 EET Sun May 15 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -85,6 +87,12 @@ interface Ethernet0/3
  ip address 10.0.3.14 255.255.255.0
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:14:19::1/64
+!
+router bgp 1001
+ bgp router-id 101.0.0.14
+ bgp log-neighbor-changes
+ network 100.0.0.0 mask 255.255.255.0
+ neighbor 101.0.0.22 remote-as 101
 !
 ip forward-protocol nd
 !
