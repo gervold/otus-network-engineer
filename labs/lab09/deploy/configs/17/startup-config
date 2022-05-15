@@ -1,0 +1,114 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R17
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.0.1.17 255.255.255.0
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:0:9:17::2/64
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.0.0.17 255.255.255.0
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:0:17:18::1/64
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 10.0.2.17 255.255.255.0
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:0:10:17::2/64
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
