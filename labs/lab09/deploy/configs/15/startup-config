@@ -62,6 +62,10 @@ redundancy
 !
 !
 !
+interface Loopback1
+ no shutdown
+ ip address 100.0.1.15 255.255.255.0
+!
 interface Ethernet0/0
  no shutdown
  ip address 10.0.2.15 255.255.255.0
@@ -85,6 +89,12 @@ interface Ethernet0/3
  ip address 10.0.3.15 255.255.255.0
  ipv6 address FE80::15 link-local
  ipv6 address 2001:0:15:20::1/64
+!
+router bgp 1001
+ bgp router-id 30.0.0.15
+ bgp log-neighbor-changes
+ network 100.0.1.0 mask 255.255.255.0
+ neighbor 30.0.0.21 remote-as 301
 !
 ip forward-protocol nd
 !

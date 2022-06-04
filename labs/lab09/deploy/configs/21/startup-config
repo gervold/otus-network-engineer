@@ -105,6 +105,12 @@ interface Ethernet1/3
  no ip address
  shutdown
 !
+!
+router bgp 301
+ bgp router-id 30.0.0.21
+ bgp log-neighbor-changes
+ neighbor 30.0.0.15 remote-as 1001
+!
 ip forward-protocol nd
 !
 !
