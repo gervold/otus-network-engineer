@@ -1,0 +1,121 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.0.0.5 255.255.255.0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 60.0.1.5 255.255.255.0
+ ip access-group FIREWALL in
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 10.0.2.5 255.255.255.0
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 60.0.3.5 255.255.255.0
+!
+router bgp 100
+ bgp log-neighbor-changes
+ network 10.0.0.0 mask 255.255.255.0
+ network 10.0.2.0 mask 255.255.255.0
+ neighbor 10.0.0.6 remote-as 100
+ neighbor 10.0.2.4 remote-as 100
+ neighbor 60.0.1.2 remote-as 2
+ neighbor 60.0.3.3 remote-as 3
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ip access-list extended FIREWALL
+ permit tcp any any eq 22
+ permit icmp any any
+ deny   ip any any
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
