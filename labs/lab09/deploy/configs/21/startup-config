@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 22:48:17 EET Sat Jun 4 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -105,12 +107,12 @@ interface Ethernet1/3
  no ip address
  shutdown
 !
-!
 router bgp 301
  bgp router-id 30.0.0.21
  bgp log-neighbor-changes
  neighbor 30.0.0.15 remote-as 1001
  neighbor 52.0.0.24 remote-as 520
+ neighbor 192.168.0.22 remote-as 101
 !
 ip forward-protocol nd
 !
