@@ -110,6 +110,7 @@ router bgp 520
  bgp router-id 52.0.0.24
  bgp log-neighbor-changes
  neighbor 52.0.0.21 remote-as 301
+ neighbor 52.0.1.18 remote-as 2042
 !
 ip forward-protocol nd
 !
