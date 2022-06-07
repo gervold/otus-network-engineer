@@ -84,9 +84,7 @@ router bgp 2
  network 100.0.0.0 mask 255.255.255.0
  network 100.0.2.0 mask 255.255.255.0
  neighbor 50.0.3.4 remote-as 100
- neighbor 50.0.3.4 route-map PER in
  neighbor 60.0.1.5 remote-as 100
- neighbor 60.0.1.5 route-map PER in
  neighbor 100.0.0.1 remote-as 1
  neighbor 100.0.2.3 remote-as 3
 !

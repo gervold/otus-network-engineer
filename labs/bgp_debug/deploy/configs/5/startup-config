@@ -61,9 +61,15 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 5.5.5.5 255.255.255.255
+ ip ospf 1 area 0
+!
 interface Ethernet0/0
  no shutdown
  ip address 10.0.0.5 255.255.255.0
+ ip ospf 1 area 0
 !
 interface Ethernet0/1
  no shutdown
@@ -73,28 +79,40 @@ interface Ethernet0/1
 interface Ethernet0/2
  no shutdown
  ip address 10.0.2.5 255.255.255.0
+ ip ospf 1 area 0
 !
 interface Ethernet0/3
  no shutdown
  ip address 60.0.3.5 255.255.255.0
 !
+router ospf 1
+!
 router bgp 100
  bgp log-neighbor-changes
+ bgp bestpath as-path multipath-relax
  network 10.0.0.0 mask 255.255.255.0
  network 10.0.2.0 mask 255.255.255.0
- neighbor 10.0.0.6 remote-as 100
- neighbor 10.0.2.4 remote-as 100
+ neighbor 4.4.4.4 remote-as 100
+ neighbor 4.4.4.4 update-source Loopback0
+ neighbor 6.6.6.6 remote-as 100
+ neighbor 6.6.6.6 update-source Loopback0
  neighbor 60.0.1.2 remote-as 2
+ neighbor 60.0.1.2 filter-list 1 out
  neighbor 60.0.3.3 remote-as 3
+ neighbor 60.0.3.3 filter-list 1 out
+ maximum-paths 2
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
 !
 ip access-list extended FIREWALL
  permit tcp any any eq 22
+ permit tcp any any eq bgp
  permit icmp any any
  deny   ip any any
 !
@@ -102,6 +120,7 @@ ip access-list extended FIREWALL
 !
 !
 control-plane
+!
 !
 !
 !

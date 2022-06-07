@@ -85,14 +85,20 @@ interface Ethernet0/3
 !
 router bgp 1
  bgp log-neighbor-changes
+ bgp bestpath as-path multipath-relax
  network 100.0.0.0 mask 255.255.255.0
  network 100.0.1.0 mask 255.255.255.0
  network 200.200.200.200 mask 255.255.255.255
  neighbor 100.0.0.2 remote-as 2
+ neighbor 100.0.0.2 filter-list 1 out
  neighbor 100.0.1.3 remote-as 3
+ neighbor 100.0.1.3 filter-list 1 out
+ maximum-paths 2
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
