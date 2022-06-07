@@ -2,7 +2,7 @@
 
 HOST=$1
 USER='root'  #auth by cert
-LAB_PATH='/opt/unetlab/tmp/0/1766ca93-35b2-48a6-ba2b-bfe0bcfae4cb'
+LAB_PATH='/opt/unetlab/tmp/0/99d28ddd-2c81-4bb1-b30e-c48fca46eca2'
 LAB_FILE='/opt/unetlab/labs/BGP_TS/BGP_TS.unl'
 
 #root@eve-ng:/opt/unetlab/tmp/0/1766ca93-35b2-48a6-ba2b-bfe0bcfae4cb# ls
