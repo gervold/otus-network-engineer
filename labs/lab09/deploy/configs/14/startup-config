@@ -65,6 +65,7 @@ redundancy
 interface Loopback1
  no shutdown
  ip address 100.0.0.14 255.255.255.0
+ ipv6 address 2001:1001:0:100::14/128
 !
 interface Ethernet0/0
  no shutdown
@@ -82,7 +83,7 @@ interface Ethernet0/2
  no shutdown
  ip address 101.0.0.14 255.255.255.0
  ipv6 address FE80::14 link-local
- ipv6 address 2001:1001:14:22::1/64
+ ipv6 address 2001:101:14:22::1/64
 !
 interface Ethernet0/3
  no shutdown
@@ -93,8 +94,19 @@ interface Ethernet0/3
 router bgp 1001
  bgp router-id 101.0.0.14
  bgp log-neighbor-changes
- network 100.0.0.0 mask 255.255.255.0
  neighbor 101.0.0.22 remote-as 101
+ neighbor 2001:101:14:22::2 remote-as 101
+  !
+ address-family ipv4
+   network 100.0.0.0 mask 255.255.255.0
+   neighbor 101.0.0.21 activate
+   no neighbor 2001:101:14:22::2 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:1001:0:100::14/128
+  neighbor 2001:101:14:22::2 activate
+ exit-address-family
 !
 ip forward-protocol nd
 !

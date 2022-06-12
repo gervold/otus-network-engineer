@@ -109,7 +109,18 @@ router bgp 101
  bgp router-id 101.0.0.22
  bgp log-neighbor-changes
  neighbor 101.0.0.14 remote-as 1001
+ neighbor 2001:101:14:22::1 remote-as 1001
  neighbor 192.168.0.21 remote-as 301
+ !
+ address-family ipv4
+  neighbor 101.0.0.14 activate
+  no neighbor 2001:101:14:22::1 activate
+  neighbor 192.168.0.21 activate
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:101:14:22::1 activate
+ exit-address-family
 !
 ip forward-protocol nd
 !
