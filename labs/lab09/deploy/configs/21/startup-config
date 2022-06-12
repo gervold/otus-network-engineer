@@ -125,6 +125,7 @@ router bgp 301
  address-family ipv6
   neighbor 2001:301:15:21::1 activate
   neighbor 2001:520:21:24::2 activate
+  neighbor 192.168.0.22 activate
  exit-address-family
 !
 ip forward-protocol nd
