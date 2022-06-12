@@ -82,7 +82,7 @@ interface Ethernet0/2
  no shutdown
  ip address 30.0.0.15 255.255.255.0
  ipv6 address FE80::15 link-local
- ipv6 address 2001:1001:15:21::1/64
+ ipv6 address 2001:301:15:21::1/64
 !
 interface Ethernet0/3
  no shutdown
