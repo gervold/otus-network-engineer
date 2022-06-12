@@ -110,7 +110,20 @@ router bgp 520
  bgp router-id 52.0.0.24
  bgp log-neighbor-changes
  neighbor 52.0.0.21 remote-as 301
+ neighbor 2001:520:21:24::1 remote-as 301
  neighbor 52.0.1.18 remote-as 2042
+ neighbor 2001:520:18:24::1 remote-as 2042
+ !
+ address-family ipv4
+  neighbor 52.0.0.21 activate
+  no neighbor 2001:520:21:24::1 activate
+  no neighbor 2001:520:18:24::1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:520:21:24::1 activate
+  neighbor 2001:520:18:24::1 activate
+ exit-address-family
 !
 ip forward-protocol nd
 !
