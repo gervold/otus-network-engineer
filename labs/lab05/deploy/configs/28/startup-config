@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 15:39:44 EET Sun Jun 26 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -77,6 +79,7 @@ interface Ethernet0/1
 interface Ethernet0/2
  no shutdown
  ip address 5.0.0.1 255.255.255.0
+ ip access-group 1 in
  ipv6 address FE80::1 link-local
  ipv6 address 2001:0:29::1/64
 !
@@ -113,6 +116,8 @@ no ip http secure-server
 !
 !
 !
+access-list 1 deny   5.0.0.31 log
+access-list 1 permit 5.0.0.30 log
 !
 control-plane
 !
