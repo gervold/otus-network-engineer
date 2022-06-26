@@ -59,3 +59,5 @@ https://bgpfilterguide.nlnog.net/
   - OpenSource проект поднятия разных коллекторов (в том числе и BMP) http://www.pmacct.net/  
 - BFD (может использоваться не только для мониторинга BGP, но и, например, OSPF)
 
+###
+https://ftp.ripe.net/ripe/asnames/asn.txt
