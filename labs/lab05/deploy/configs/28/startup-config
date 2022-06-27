@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 20:39:53 EET Sun Jun 26 2022
+! Last configuration change at 22:38:00 EET Mon Jun 27 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -119,6 +119,22 @@ ip access-list extended ACL-VPC30
 ip access-list extended ACL-VPC31
  permit ip host 5.0.0.31 any
 !
+ip sla 1
+ icmp-echo 52.0.3.26 source-ip 52.0.3.28
+ frequency 5
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 52.0.4.25 source-ip 52.0.4.25
+ frequency 5
+ip sla schedule 2 life forever start-time now
+ip sla 3
+ icmp-echo 2001:520:26:28::1 source-ip 2001:520:26:28::2
+ frequency 5
+ip sla schedule 3 life forever start-time now
+ip sla 4
+ icmp-echo 2001:520:25:28::1 source-ip 2001:520:25:28::2
+ frequency 5
+ip sla schedule 4 life forever start-time now
 !
 route-map RM-BALANCING permit 10
  match ip address ACL-VPC30
