@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 22:38:00 EET Mon Jun 27 2022
+! Last configuration change at 22:24:45 EET Wed Jun 29 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -50,6 +50,10 @@ multilink bundle-name authenticated
 !
 redundancy
 !
+!
+track 1 ip sla 1 reachability
+!
+track 2 ip sla 2 reachability
 !
 ! 
 !
@@ -138,10 +142,14 @@ ip sla schedule 4 life forever start-time now
 !
 route-map RM-BALANCING permit 10
  match ip address ACL-VPC30
+ set ip next-hop verify-availability 52.0.3.26 10 track 1
+ set ip next-hop verify-availability 52.0.4.25 20 track 2
  set ip next-hop 52.0.3.26
 !
 route-map RM-BALANCING permit 20
  match ip address ACL-VPC31
+ set ip next-hop verify-availability 52.0.4.25 10 track 2
+ set ip next-hop verify-availability 52.0.3.26 20 track 1
  set ip next-hop 52.0.4.25
 !
 !
