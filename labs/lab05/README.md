@@ -284,4 +284,144 @@ Number of failures: 1
 Operation time to live: Forever
 ```
 
+### Настройка мониторинга доступности провайдеров и автоматическое переключение
 
+Выполнялось при помощи `track`:
+```
+!
+route-map RM-BALANCING permit 10
+ match ip address ACL-VPC30
+ set ip next-hop verify-availability 52.0.3.26 10 track 1
+ set ip next-hop verify-availability 52.0.4.25 20 track 2
+ set ip next-hop 52.0.3.26
+!
+route-map RM-BALANCING permit 20
+ match ip address ACL-VPC31
+ set ip next-hop verify-availability 52.0.4.25 10 track 2
+ set ip next-hop verify-availability 52.0.3.26 20 track 1
+ set ip next-hop 52.0.4.25
+!
+```
+```
+!
+track 1 ip sla 1 reachability
+!
+track 2 ip sla 2 reachability
+!
+```
+
+### Проверка
+
+Для проверки пришлось настроить статические маршруты на маршрутизаторах R25, R26, R27.
+
+<details>
+<summary> static routes </summary>
+
+R25
+```
+ip route 5.0.0.0 255.255.255.0 52.0.4.28 name test_track_chokurdah
+ip route 5.0.0.0 255.255.255.0 10.0.2.26 150 name to_triada_less_priority
+ip route 40.0.0.27 255.255.255.255 52.0.5.27 name to_labintagi
+```
+R26
+```
+ip route 5.0.0.0 255.255.255.0 52.0.3.28 name to_chokurdah
+ip route 40.0.0.27 255.255.255.255 10.0.2.25 name to_labintagi
+```
+
+R28
+```
+ip route 40.0.0.27 255.255.255.255 52.0.4.25 name to_labintagi
+ip route 40.0.0.27 255.255.255.255 52.0.3.26 name to_labintagi
+```
+
+</details>
+
+**До обрыва линка**  
+Посмотрим маршрут с VPC30:
+```
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.351 ms  0.231 ms  0.206 ms
+ 2   52.0.3.26   0.421 ms  0.320 ms  0.322 ms
+ 3   10.0.2.25   0.394 ms  0.369 ms  0.352 ms
+ 4   40.0.0.27   0.606 ms  0.442 ms  0.445 ms
+```
+и с VPC31:
+```
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.283 ms  0.253 ms  0.284 ms
+ 2   52.0.4.25   0.522 ms  0.369 ms  0.378 ms
+ 3   40.0.0.27   0.683 ms  0.450 ms  0.469 ms
+```
+
+Маршруты идут разными путями, балансировка работает.
+
+Проверка доступности с R27:
+```
+R27#trace 5.0.0.30 source 40.0.0.27
+Type escape sequence to abort.
+Tracing the route to 5.0.0.30
+VRF info: (vrf in name/id, vrf out name/id)
+  1 52.0.5.25 0 msec 1 msec 0 msec
+  2 52.0.4.28 0 msec 1 msec 0 msec
+  3 5.0.0.30 1 msec 0 msec 0 msec
+```
+
+Гасим `eth0/3` на R25:
+```
+R25(config-if)#shutdown
+```
+
+Проверяем, что доступность все равно есть и изменился маршрут с R31:
+```
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.305 ms  0.281 ms  0.277 ms
+ 2   52.0.3.26   0.527 ms  0.449 ms  0.355 ms
+ 3   10.0.2.25   0.712 ms  0.696 ms  0.555 ms
+ 4   40.0.0.27   0.735 ms  0.889 ms  0.514 ms
+```
+
+Поднимаем `eth0/3` на R25 обратно, наблюдаем небольшую задержку и перестроение.
+
+```
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.498 ms  0.248 ms  0.255 ms
+ 2   52.0.3.26   0.394 ms  0.338 ms  0.426 ms
+ 3   10.0.2.25   0.445 ms  0.386 ms  0.422 ms
+ 4   40.0.0.27   0.614 ms  0.505 ms  0.506 ms
+
+(~ 5 сек)
+
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.459 ms  0.234 ms  0.223 ms
+ 2   52.0.4.25   0.488 ms  0.360 ms  0.327 ms
+ 3   40.0.0.27   0.454 ms  0.560 ms  0.465 ms
+
+VPCS>
+```
+
+Балансировка и автоматическое перестроение маршрутов – работают.
+
+<details>
+<summary>Грабли</summary>
+Если гасить интерфейс на R28, то обратный трафик с R25 будет продолжать маршрутизироваться в более приоритетный R28, 
+не подозревая, что R28 сломан (на R25 IP SLA – нет) и трейс будет следующий:
+
+```
+VPCS> trace 40.0.0.27 -P 1
+trace to 40.0.0.27, 8 hops max (ICMP), press Ctrl+C to stop
+ 1   5.0.0.1   0.458 ms  0.270 ms  0.269 ms
+ 2   52.0.3.26   0.387 ms  0.440 ms  0.357 ms
+ 3   10.0.2.25   0.663 ms  0.469 ms  0.409 ms
+ 4     *  *  *
+ 5     *  *  *
+ 6     *  *  *
+ 7     *  *  *
+ 8     *  *  *
+```
+</details>
