@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 01:10:18 EET Thu Jun 30 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -111,6 +113,9 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 5.0.0.0 255.255.255.0 52.0.4.28 name test_track_chokurdah
+ip route 5.0.0.0 255.255.255.0 10.0.2.26 150 name to_triada_less_priority
+ip route 40.0.0.27 255.255.255.255 52.0.5.27 name to_labintagi
 !
 !
 !

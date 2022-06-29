@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 00:52:11 EET Thu Jun 30 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -109,24 +111,25 @@ interface Ethernet1/3
 router bgp 520
  bgp router-id 52.0.2.26
  bgp log-neighbor-changes
- neighbor 52.0.2.18 remote-as 2042
  neighbor 2001:520:18:26::1 remote-as 2042
+ neighbor 52.0.2.18 remote-as 2042
  !
  address-family ipv4
-  neighbor 52.0.2.18 activate
   no neighbor 2001:520:18:26::1 activate
+  neighbor 52.0.2.18 activate
  exit-address-family
  !
  address-family ipv6
   neighbor 2001:520:18:26::1 activate
  exit-address-family
 !
-!
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip route 5.0.0.0 255.255.255.0 52.0.3.28 name to_chokurdah
+ip route 40.0.0.27 255.255.255.255 10.0.2.25 name to_labintagi
 !
 !
 !
