@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 19:43:56 EET Sat Jul 2 2022
+! Last configuration change at 23:02:56 EET Sat Jul 2 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -128,6 +128,7 @@ router ospf 1
  no passive-interface Ethernet0/1
  no passive-interface Ethernet0/3
  no passive-interface Ethernet1/0
+ default-information originate always
 !
 router bgp 1001
  bgp router-id 101.0.0.14

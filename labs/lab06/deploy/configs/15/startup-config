@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 19:46:09 EET Sat Jul 2 2022
+! Last configuration change at 22:51:49 EET Sat Jul 2 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -123,6 +123,7 @@ router ospf 1
  no passive-interface Ethernet0/1
  no passive-interface Ethernet0/3
  no passive-interface Ethernet1/0
+ default-information originate
 !
 router bgp 1001
  bgp router-id 30.0.0.15
@@ -146,6 +147,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
 !
 !
 !
