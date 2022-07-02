@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 19:01:02 EET Sat Jul 2 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -62,6 +64,11 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 10.6.66.14 255.255.255.255
+ ip ospf 1 area 0
+!
 interface Loopback1
  no shutdown
  ip address 100.0.0.14 255.255.255.0
@@ -90,6 +97,35 @@ interface Ethernet0/3
  ip address 10.0.3.14 255.255.255.0
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:14:19::1/64
+!
+interface Ethernet1/0
+ no shutdown
+ ip address 10.0.5.14 255.255.255.0
+ ip ospf 1 area 0
+ ipv6 address 2001:1001:14:15::1/64
+!
+interface Ethernet1/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 14.14.14.14
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
+ no passive-interface Ethernet0/3
+ no passive-interface Ethernet1/0
 !
 router bgp 1001
  bgp router-id 101.0.0.14
