@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 12:54:30 EET Sun Jul 3 2022
+! Last configuration change at 14:57:59 EET Sun Jul 3 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -154,15 +154,21 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
-ipv6 route ::/0 2001:1001:15:21::2 name default_to_lamas
 !
 !
 ip prefix-list DENY-AREA-101 seq 5 deny 100.0.0.19/32
 ip prefix-list DENY-AREA-101 seq 100 permit 0.0.0.0/0 le 32
-!
+ipv6 route ::/0 2001:1001:15:21::2 name default_to_lamas
 ipv6 router ospf 1
  router-id 15.15.15.15
+ distribute-list prefix-list DENY-AREA-101-IPV6 in  
  default-information originate
+!
+!
+!
+ipv6 prefix-list DENY-AREA-101-IPV6 seq 5 deny 2001:1001:0:100::19/128
+ipv6 prefix-list DENY-AREA-101-IPV6 seq 100 permit ::/0
+!
 !
 control-plane
 !
