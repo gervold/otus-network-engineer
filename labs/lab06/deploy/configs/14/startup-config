@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 23:02:56 EET Sat Jul 2 2022
+! Last configuration change at 12:08:16 EET Sun Jul 3 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -97,6 +97,7 @@ interface Ethernet0/2
 interface Ethernet0/3
  no shutdown
  ip address 10.0.3.14 255.255.255.0
+ ip ospf 1 area 101
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:14:19::1/64
 !
@@ -123,6 +124,7 @@ interface Ethernet1/3
 !
 router ospf 1
  router-id 14.14.14.14
+ area 101 stub no-summary
  passive-interface default
  no passive-interface Ethernet0/0
  no passive-interface Ethernet0/1
