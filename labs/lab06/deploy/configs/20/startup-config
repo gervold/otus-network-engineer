@@ -67,7 +67,7 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 10.0.3.20 255.255.255.0
- ip ospf 10 area 102
+ ip ospf 1 area 102
  ipv6 address FE80::20 link-local
  ipv6 address 2001:0:15:20::2/64
 !
@@ -90,8 +90,6 @@ router ospf 1
  router-id 20.20.20.20
  passive-interface default
  no passive-interface Ethernet0/0
-!
-router ospf 10
 !
 ip forward-protocol nd
 !
