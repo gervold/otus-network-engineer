@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 19:23:01 EET Sun Jul 3 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -65,6 +67,7 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 10.0.1.25 255.255.255.0
+ ip router isis 
  ipv6 address FE80::25 link-local
  ipv6 address 2001:0:23:25::2/64
 !
@@ -105,6 +108,9 @@ interface Ethernet1/3
  no shutdown
  no ip address
  shutdown
+!
+router isis
+ net 49.2222.0000.0000.0025.00
 !
 ip forward-protocol nd
 !
