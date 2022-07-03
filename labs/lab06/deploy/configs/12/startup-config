@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 19:35:20 EET Sat Jul 2 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -98,6 +96,7 @@ interface Ethernet0/2
  ip ospf 1 area 10
  ipv6 address FE80::12 link-local
  ipv6 address 2001:0:12:14::1/64
+ ipv6 ospf 1 area 10
 !
 interface Ethernet0/3
  no shutdown
@@ -105,6 +104,7 @@ interface Ethernet0/3
  ip ospf 1 area 10
  ipv6 address FE80::12 link-local
  ipv6 address 2001:0:12:15::1/64
+ ipv6 ospf 1 area 10
 !
 interface Ethernet1/0
  no shutdown
@@ -140,6 +140,10 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+!
+!
+ipv6 router ospf 1
+ router-id 12.12.12.12
 !
 !
 !
