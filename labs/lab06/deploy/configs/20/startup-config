@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 12:26:46 EET Sun Jul 3 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -65,6 +67,7 @@ redundancy
 interface Ethernet0/0
  no shutdown
  ip address 10.0.3.20 255.255.255.0
+ ip ospf 10 area 102
  ipv6 address FE80::20 link-local
  ipv6 address 2001:0:15:20::2/64
 !
@@ -82,6 +85,13 @@ interface Ethernet0/3
  no shutdown
  no ip address
  shutdown
+!
+router ospf 1
+ router-id 20.20.20.20
+ passive-interface default
+ no passive-interface Ethernet0/0
+!
+router ospf 10
 !
 ip forward-protocol nd
 !

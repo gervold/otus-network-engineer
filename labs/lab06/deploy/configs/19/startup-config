@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 12:10:29 EET Sun Jul 3 2022
+! Last configuration change at 12:39:01 EET Sun Jul 3 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -63,6 +63,12 @@ redundancy
 !
 !
 !
+!
+interface Loopback0
+ no shutdown
+ ip address 100.0.0.19 255.255.255.255
+ ip ospf 1 area 101
+ ipv6 address 2001:1001:0:100::19/64
 !
 interface Ethernet0/0
  no shutdown

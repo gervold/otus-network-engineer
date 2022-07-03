@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 22:51:49 EET Sat Jul 2 2022
+! Last configuration change at 12:54:30 EET Sun Jul 3 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -92,6 +92,7 @@ interface Ethernet0/2
 interface Ethernet0/3
  no shutdown
  ip address 10.0.3.15 255.255.255.0
+ ip ospf 1 area 102
  ipv6 address FE80::15 link-local
  ipv6 address 2001:0:15:20::1/64
 !
@@ -118,6 +119,7 @@ interface Ethernet1/3
 !
 router ospf 1
  router-id 15.15.15.15
+ area 102 filter-list prefix DENY-AREA-101 in
  passive-interface default
  no passive-interface Ethernet0/0
  no passive-interface Ethernet0/1
@@ -149,6 +151,9 @@ no ip http server
 no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
 !
+!
+ip prefix-list DENY-AREA-101 seq 5 deny 100.0.0.19/32
+ip prefix-list DENY-AREA-101 seq 100 permit 0.0.0.0/0 le 32
 !
 !
 !
