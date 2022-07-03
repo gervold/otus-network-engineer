@@ -71,14 +71,18 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  ip address 10.0.3.24 255.255.255.0
+ ip router isis
  ipv6 address FE80::24 link-local
  ipv6 address 2001:0:24:26::1/64
+ ipv6 router isis
 !
 interface Ethernet0/2
  no shutdown
  ip address 10.0.0.24 255.255.255.0
+ ip router isis
  ipv6 address FE80::24 link-local
  ipv6 address 2001:0:23:24::2/64
+ ipv6 router isis
 !
 interface Ethernet0/3
  no shutdown
@@ -105,6 +109,12 @@ interface Ethernet1/3
  no shutdown
  no ip address
  shutdown
+!
+!
+!
+router isis
+ net 49.24.0000.0000.0024.00
+!
 !
 router bgp 520
  bgp router-id 52.0.0.24

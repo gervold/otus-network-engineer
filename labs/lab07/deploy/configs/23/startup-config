@@ -73,15 +73,18 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  ip address 10.0.1.23 255.255.255.0
- ip router isis 
+ ip router isis
  ipv6 address FE80::23 link-local
  ipv6 address 2001:0:23:25::1/64
+ ipv6 router isis
 !
 interface Ethernet0/2
  no shutdown
  ip address 10.0.0.23 255.255.255.0
+ ip router isis
  ipv6 address FE80::23 link-local
  ipv6 address 2001:0:23:24::1/64
+ ipv6 router isis
 !
 interface Ethernet0/3
  no shutdown
