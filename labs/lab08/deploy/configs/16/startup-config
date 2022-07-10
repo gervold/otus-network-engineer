@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 21:45:38 EET Sun Jul 10 2022
+! Last configuration change at 21:55:15 EET Sun Jul 10 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -107,6 +107,7 @@ router eigrp SPB-NET
   exit-af-interface
   !
   af-interface Ethernet0/3
+   summary-address 0.0.0.0 0.0.0.0
    no shutdown
   exit-af-interface
   !
@@ -124,6 +125,10 @@ router eigrp SPB-NET
  exit-address-family
  !
  address-family ipv6 unicast autonomous-system 2042
+  !
+  af-interface Ethernet0/3
+   summary-address ::/0
+  exit-af-interface
   !
   topology base
   exit-af-topology
