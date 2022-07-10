@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 16:12:16 EET Sun Jul 10 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -66,7 +64,7 @@ redundancy
 !
 interface Ethernet0/0
  no shutdown
- ip address 10.0.0.16 255.255.255.0
+ ip address 10.0.2.5 255.255.255.252
  ipv6 address FE80::16 link-local
  ipv6 address 2001:0:10:16::2/64
 !
@@ -78,7 +76,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
- ip address 10.0.2.16 255.255.255.0
+ ip address 10.0.2.13 255.255.255.252
  ipv6 address FE80::16 link-local
  ipv6 address 2001:0:16:9::1/64
 !
@@ -95,9 +93,9 @@ router eigrp SPB-NET
   !
   topology base
   exit-af-topology
-  network 10.0.0.0 0.0.0.255
   network 10.0.1.0 0.0.0.255
-  network 10.0.2.0 0.0.0.255
+  network 10.0.2.4 0.0.0.3
+  network 10.0.2.12 0.0.0.3
   network 10.0.3.0 0.0.0.255
   eigrp router-id 16.16.16.16
  exit-address-family
