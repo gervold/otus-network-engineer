@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 18:15:19 EET Sun Jul 3 2022
+! Last configuration change at 20:45:51 EET Sun Jul 10 2022
 !
 version 15.2
 service timestamps debug datetime msec
@@ -70,9 +70,15 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
+ no switchport
+ ip address 10.0.2.6 255.255.255.252
+ duplex auto
 !
 interface Ethernet1/0
  no shutdown
+ no switchport
+ ip address 10.0.2.10 255.255.255.252
+ duplex auto
 !
 interface Ethernet1/1
  no shutdown
@@ -88,6 +94,25 @@ interface Vlan110
  ip address 200.0.1.1 255.255.255.0
  ipv6 address FE80::10 link-local
  ipv6 address 2001:2042:10:11::1/64
+!
+!
+router eigrp SPB-NET
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  topology base
+  exit-af-topology
+  network 10.0.2.4 0.0.0.3
+  network 10.0.2.8 0.0.0.3
+  eigrp router-id 10.10.10.10
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 10.10.10.10
+ exit-address-family
 !
 ip forward-protocol nd
 !
