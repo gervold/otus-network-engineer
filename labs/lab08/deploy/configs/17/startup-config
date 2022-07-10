@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 21:42:22 EET Sun Jul 10 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -99,6 +101,7 @@ router eigrp SPB-NET
   exit-af-interface
   !
   af-interface Ethernet0/1
+   summary-address 10.0.2.0 255.255.255.0
    no shutdown
   exit-af-interface
   !
