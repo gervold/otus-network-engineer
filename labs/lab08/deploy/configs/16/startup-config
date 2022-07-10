@@ -91,6 +91,26 @@ router eigrp SPB-NET
  !
  address-family ipv4 unicast autonomous-system 2042
   !
+  af-interface default
+   shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no shutdown
+  exit-af-interface
+  !
   topology base
   exit-af-topology
   network 10.0.1.0 0.0.0.255
