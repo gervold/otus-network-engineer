@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 13:58:51 EET Sat Jul 9 2022
+! Last configuration change at 16:12:16 EET Sun Jul 10 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -99,6 +99,13 @@ router eigrp SPB-NET
   topology base
   exit-af-topology
   network 10.0.3.0 0.0.0.255
+  eigrp router-id 16.16.16.16
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  topology base
+  exit-af-topology
  exit-address-family
 !
 ip forward-protocol nd

@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 13:57:16 EET Sat Jul 9 2022
+! Last configuration change at 16:10:14 EET Sun Jul 10 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -67,6 +67,7 @@ redundancy
 interface Loopback0
  no shutdown
  ip address 123.123.123.123 255.255.255.255
+ ipv6 address 2001:0:16:321::123/128
 !
 interface Ethernet0/0
  no shutdown
@@ -98,6 +99,14 @@ router eigrp SPB-NET
   exit-af-topology
   network 10.0.3.0 0.0.0.255
   network 123.123.123.123 0.0.0.0
+  eigrp router-id 32.32.32.32
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 32.32.32.32
  exit-address-family
 !
 ip forward-protocol nd
