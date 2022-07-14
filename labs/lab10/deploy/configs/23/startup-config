@@ -122,12 +122,13 @@ router isis
 router bgp 520
  bgp router-id 23.23.23.23
  bgp log-neighbor-changes
- neighbor triada peer-group
- neighbor triada remote-as 520
- neighbor triada update-source Loopback0
- neighbor 24.24.24.24 peer-group triada
- neighbor 25.25.25.25 peer-group triada
- neighbor 26.26.26.26 peer-group triada
+ neighbor RR-TRIADA peer-group
+ neighbor RR-TRIADA remote-as 520
+ neighbor RR-TRIADA update-source Loopback0
+ neighbor RR-TRIADA route-reflector-client
+ neighbor 24.24.24.24 peer-group RR-TRIADA
+ neighbor 25.25.25.25 peer-group RR-TRIADA
+ neighbor 26.26.26.26 peer-group RR-TRIADA
 !
 ip forward-protocol nd
 !
