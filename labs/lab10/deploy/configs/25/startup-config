@@ -62,11 +62,10 @@ redundancy
 !
 !
 !
-!
 interface Loopback0
  no shutdown
  ip address 25.25.25.25 255.255.255.255
- ip router isis
+ ip router isis 
 !
 interface Ethernet0/0
  no shutdown
@@ -119,14 +118,15 @@ interface Ethernet1/3
 router isis
  net 49.2222.0000.0000.0025.00
 !
-!
 router bgp 520
- neighbor 23.23.23.23 remote-as 520
- neighbor 23.23.23.23 update-source Loopback0
- neighbor 24.24.24.24 remote-as 520
- neighbor 24.24.24.24 update-source Loopback0
- neighbor 26.26.26.26 remote-as 520
- neighbor 26.26.26.26 update-source Loopback0
+ bgp router-id 25.25.25.25
+ bgp log-neighbor-changes
+ neighbor triada peer-group
+ neighbor triada remote-as 520
+ neighbor triada update-source Loopback0
+ neighbor 23.23.23.23 peer-group triada
+ neighbor 24.24.24.24 peer-group triada
+ neighbor 26.26.26.26 peer-group triada
 !
 ip forward-protocol nd
 !

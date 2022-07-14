@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 18:16:37 EET Thu Jul 14 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -65,7 +67,7 @@ redundancy
 interface Loopback0
  no shutdown
  ip address 23.23.23.23 255.255.255.255
- ip router isis
+ ip router isis 
 !
 interface Ethernet0/0
  no shutdown
@@ -117,15 +119,15 @@ interface Ethernet1/3
 router isis
  net 49.2222.0000.0000.0023.00
 !
-!
 router bgp 520
  bgp router-id 23.23.23.23
- neighbor 24.24.24.24 remote-as 520
- neighbor 24.24.24.24 update-source Loopback0
- neighbor 25.25.25.25 remote-as 520
- neighbor 25.25.25.25 update-source Loopback0
- neighbor 26.26.26.26 remote-as 520
- neighbor 26.26.26.26 update-source Loopback0
+ bgp log-neighbor-changes
+ neighbor triada peer-group
+ neighbor triada remote-as 520
+ neighbor triada update-source Loopback0
+ neighbor 24.24.24.24 peer-group triada
+ neighbor 25.25.25.25 peer-group triada
+ neighbor 26.26.26.26 peer-group triada
 !
 ip forward-protocol nd
 !

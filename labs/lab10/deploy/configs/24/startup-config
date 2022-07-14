@@ -65,7 +65,7 @@ redundancy
 interface Loopback0
  no shutdown
  ip address 24.24.24.24 255.255.255.255
- ip router isis
+ ip router isis 
 !
 interface Ethernet0/0
  no shutdown
@@ -119,14 +119,23 @@ router isis
  net 49.2400.0000.0000.2400
 !
 router bgp 520
- bgp router-id 52.0.0.24
+ bgp router-id 24.24.24.24
  bgp log-neighbor-changes
+ neighbor triada peer-group
+ neighbor triada remote-as 520
+ neighbor triada update-source Loopback0
+ neighbor 23.23.23.23 peer-group triada
+ neighbor 25.25.25.25 peer-group triada
+ neighbor 26.26.26.26 peer-group triada
  neighbor 2001:520:18:24::1 remote-as 2042
  neighbor 2001:520:21:24::1 remote-as 301
  neighbor 52.0.0.21 remote-as 301
  neighbor 52.0.1.18 remote-as 2042
  !
  address-family ipv4
+  neighbor 23.23.23.23 activate
+  neighbor 25.25.25.25 activate
+  neighbor 26.26.26.26 activate
   no neighbor 2001:520:18:24::1 activate
   no neighbor 2001:520:21:24::1 activate
   neighbor 52.0.0.21 activate
@@ -137,16 +146,6 @@ router bgp 520
   neighbor 2001:520:18:24::1 activate
   neighbor 2001:520:21:24::1 activate
  exit-address-family
-!
-!
-router bgp 520
- bgp router-id 24.24.24.24
- neighbor 23.23.23.23 remote-as 520
- neighbor 23.23.23.23 update-source Loopback0
- neighbor 25.25.25.25 remote-as 520
- neighbor 25.25.25.25 update-source Loopback0
- neighbor 26.26.26.26 remote-as 520
- neighbor 26.26.26.26 update-source Loopback0
 !
 ip forward-protocol nd
 !
