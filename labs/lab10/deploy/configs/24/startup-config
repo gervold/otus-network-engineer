@@ -62,6 +62,11 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 24.24.24.24 255.255.255.255
+ ip router isis
+!
 interface Ethernet0/0
  no shutdown
  ip address 52.0.0.24 255.255.255.0
@@ -132,6 +137,16 @@ router bgp 520
   neighbor 2001:520:18:24::1 activate
   neighbor 2001:520:21:24::1 activate
  exit-address-family
+!
+!
+router bgp 520
+ bgp router-id 24.24.24.24
+ neighbor 23.23.23.23 remote-as 520
+ neighbor 23.23.23.23 update-source Loopback0
+ neighbor 25.25.25.25 remote-as 520
+ neighbor 25.25.25.25 update-source Loopback0
+ neighbor 26.26.26.26 remote-as 520
+ neighbor 26.26.26.26 update-source Loopback0
 !
 ip forward-protocol nd
 !

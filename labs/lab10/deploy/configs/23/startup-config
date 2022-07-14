@@ -62,6 +62,11 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 23.23.23.23 255.255.255.255
+ ip router isis
+!
 interface Ethernet0/0
  no shutdown
  ip address 52.0.0.23 255.255.255.0
@@ -111,6 +116,16 @@ interface Ethernet1/3
 !
 router isis
  net 49.2222.0000.0000.0023.00
+!
+!
+router bgp 520
+ bgp router-id 23.23.23.23
+ neighbor 24.24.24.24 remote-as 520
+ neighbor 24.24.24.24 update-source Loopback0
+ neighbor 25.25.25.25 remote-as 520
+ neighbor 25.25.25.25 update-source Loopback0
+ neighbor 26.26.26.26 remote-as 520
+ neighbor 26.26.26.26 update-source Loopback0
 !
 ip forward-protocol nd
 !
