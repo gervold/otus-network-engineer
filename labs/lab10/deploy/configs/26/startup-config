@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 21:24:51 EET Thu Jul 14 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -128,6 +130,7 @@ router bgp 520
  !
  address-family ipv4
   neighbor 23.23.23.23 activate
+  neighbor 23.23.23.23 next-hop-self
   no neighbor 2001:520:18:26::1 activate
   neighbor 52.0.2.18 activate
  exit-address-family

@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 21:39:05 EET Wed Jul 13 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -147,6 +145,7 @@ router bgp 1001
  address-family ipv4
   network 100.0.1.0 mask 255.255.255.0
   neighbor 14.14.14.14 activate
+  neighbor 14.14.14.14 next-hop-self
   neighbor 30.0.0.21 activate
   no neighbor 2001:301:15:21::2 activate
  exit-address-family
