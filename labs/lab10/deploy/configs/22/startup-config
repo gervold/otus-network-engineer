@@ -71,7 +71,6 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  ip address 192.168.0.22 255.255.255.0
- ip policy route-map IPV6_NEXT_HOP
  ipv6 address FE80::22 link-local
  ipv6 address 2001:0:21:22::2/64
 !
@@ -129,10 +128,6 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-!
-!
-route-map IPV6_NEXT_HOP permit 10
- set ip next-hop 192.168.0.21
 !
 !
 !
