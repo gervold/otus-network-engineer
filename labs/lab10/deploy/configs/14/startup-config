@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 22:25:32 EET Fri Jul 15 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -148,6 +150,7 @@ router bgp 1001
   neighbor 15.15.15.15 next-hop-self
   no neighbor 2001:101:14:22::2 activate
   neighbor 101.0.0.22 activate
+  neighbor 101.0.0.22 route-map AS-PREP out
  exit-address-family
  !
  address-family ipv6
@@ -166,6 +169,9 @@ ipv6 router ospf 1
  area 101 stub no-summary
  default-information originate always
 !
+!
+route-map AS-PREP permit 10
+ set as-path prepend 1001 1001 1001 1001 1001
 !
 !
 !
