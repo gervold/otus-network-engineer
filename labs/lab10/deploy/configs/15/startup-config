@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 21:26:24 EET Fri Jul 15 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -137,6 +139,7 @@ router ospf 1
 router bgp 1001
  bgp router-id 30.0.0.15
  bgp log-neighbor-changes
+ bgp default local-preference 300
  neighbor 14.14.14.14 remote-as 1001
  neighbor 14.14.14.14 update-source Loopback0
  neighbor 30.0.0.21 remote-as 301
