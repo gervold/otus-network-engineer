@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 20:38:17 EET Fri Jul 15 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -119,6 +117,7 @@ router bgp 101
  neighbor 192.168.0.21 remote-as 301
  !
  address-family ipv4
+  network 101.101.101.101 mask 255.255.255.255
   no neighbor 2001:101:14:22::1 activate
   neighbor 101.0.0.14 activate
   neighbor 192.168.0.21 activate
@@ -134,6 +133,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+!
 !
 !
 !

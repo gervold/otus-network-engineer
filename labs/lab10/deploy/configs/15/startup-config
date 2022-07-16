@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 21:26:24 EET Fri Jul 15 2022
+! Last configuration change at 12:56:18 EET Sat Jul 16 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -72,6 +72,7 @@ interface Loopback0
 interface Loopback1
  no shutdown
  ip address 100.0.1.15 255.255.255.0
+ shutdown
  ipv6 address 2001:1001:0:101::15/128
 !
 interface Ethernet0/0
