@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 14:51:58 EET Sat Jul 16 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -149,6 +151,7 @@ router bgp 1001
   no neighbor 2001:101:14:22::2 activate
   neighbor 101.0.0.22 activate
   neighbor 101.0.0.22 route-map AS-PREP out
+  neighbor 101.0.0.22 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
@@ -158,6 +161,8 @@ router bgp 1001
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server

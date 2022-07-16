@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 12:56:18 EET Sat Jul 16 2022
+! Last configuration change at 14:52:35 EET Sat Jul 16 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -151,6 +151,7 @@ router bgp 1001
   neighbor 14.14.14.14 activate
   neighbor 14.14.14.14 next-hop-self
   neighbor 30.0.0.21 activate
+  neighbor 30.0.0.21 filter-list 1 out
   no neighbor 2001:301:15:21::2 activate
  exit-address-family
  !
@@ -161,6 +162,8 @@ router bgp 1001
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
