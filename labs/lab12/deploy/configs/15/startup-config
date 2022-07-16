@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 00:53:36 EET Sun Jul 17 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -76,6 +78,8 @@ interface Loopback1
 interface Ethernet0/0
  no shutdown
  ip address 10.0.2.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 10
  ipv6 address FE80::15 link-local
  ipv6 address 2001:0:13:15::2/64
@@ -84,6 +88,8 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  ip address 10.0.1.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 10
  ipv6 address FE80::15 link-local
  ipv6 address 2001:0:12:15::2/64
@@ -91,13 +97,18 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
+ ip address 100.1.100.1 255.255.255.252 secondary
  ip address 30.0.0.15 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
  ipv6 address FE80::15 link-local
  ipv6 address 2001:301:15:21::1/64
 !
 interface Ethernet0/3
  no shutdown
  ip address 10.0.3.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 102
  ipv6 address FE80::15 link-local
  ipv6 address 2001:0:15:20::1/64
@@ -145,7 +156,7 @@ router bgp 1001
  neighbor 2001:301:15:21::2 remote-as 301
  !
  address-family ipv4
-  network 100.0.1.0 mask 255.255.255.0
+  network 100.1.100.0 mask 255.255.255.252
   neighbor 14.14.14.14 activate
   neighbor 14.14.14.14 next-hop-self
   neighbor 30.0.0.21 activate
@@ -165,6 +176,8 @@ ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
+ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
+ip nat inside source list 1 pool NAT-POOL-MSK overload
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
 !
 !
@@ -181,6 +194,7 @@ ipv6 router ospf 1
 ipv6 prefix-list DENY-AREA-101-IPV6 seq 5 deny 2001:1001:0:100::19/128
 ipv6 prefix-list DENY-AREA-101-IPV6 seq 100 permit ::/0
 !
+access-list 1 permit 100.0.0.0 0.0.255.255
 !
 control-plane
 !
