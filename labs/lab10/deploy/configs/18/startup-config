@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 22:40:19 EET Fri Jul 15 2022
+! Last configuration change at 12:38:21 EET Sat Jul 16 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -67,11 +67,13 @@ redundancy
 interface Loopback1
  no shutdown
  ip address 200.0.0.18 255.255.255.0
+ shutdown
  ipv6 address 2001:2024:0:200::18/128
 !
 interface Loopback2
  no shutdown
  ip address 200.0.1.18 255.255.255.0
+ shutdown
  ipv6 address 2001:2024:0:201::18/128
 !
 interface Ethernet0/0
@@ -104,6 +106,7 @@ router eigrp SPB-NET
  address-family ipv4 unicast autonomous-system 2042
   !
   topology base
+   redistribute static
   exit-af-topology
   network 10.0.0.18 0.0.0.0
   network 10.0.1.18 0.0.0.0
@@ -147,6 +150,8 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 52.0.1.24
+ip route 0.0.0.0 0.0.0.0 52.0.2.26
 !
 !
 !
