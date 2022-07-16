@@ -481,3 +481,28 @@ VRF info: (vrf in name/id, vrf out name/id)
 ```
 
 </details>
+
+### Редистрибъюция дефолтных маршрутов с бордера
+
+Для обеспечения доступности пользовательских сетей сделаем редистребъюцию маршрутов по умолчанию на граничном маршрутизаторе R18.
+Самый простой способ – сделать редистрибъюцию через статику (`redistribute static`):
+
+```
+router eigrp SPB-NET
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+```
+
+После чего на всех низлежащих маршрутизаторах появляются дефолты:
+```
+Gateway of last resort is 10.0.0.18 to network 0.0.0.0
+
+D*EX  0.0.0.0/0 [170/1536000] via 10.0.0.18, 00:00:10, Ethernet0/1
+      10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
+```
+
+Есть отдельный способ делать редистрибъюцию и для eBGP маршрутов.
