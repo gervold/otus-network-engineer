@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 12:38:21 EET Sat Jul 16 2022
+! Last configuration change at 14:56:32 EET Sat Jul 16 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -134,7 +134,9 @@ router bgp 2042
   no neighbor 2001:520:18:24::2 activate
   no neighbor 2001:520:18:26::2 activate
   neighbor 52.0.1.24 activate
+  neighbor 52.0.1.24 prefix-list PL-NO-TRANSIT out
   neighbor 52.0.2.26 activate
+  neighbor 52.0.2.26 prefix-list PL-NO-TRANSIT out
   maximum-paths 2
  exit-address-family
  !
@@ -153,6 +155,9 @@ no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 52.0.1.24
 ip route 0.0.0.0 0.0.0.0 52.0.2.26
 !
+!
+ip prefix-list PL-NO-TRANSIT seq 5 permit 200.0.0.0/24
+ip prefix-list PL-NO-TRANSIT seq 10 permit 200.0.1.0/24
 !
 !
 !
