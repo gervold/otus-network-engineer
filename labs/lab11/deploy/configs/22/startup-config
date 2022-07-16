@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 15:35:58 EET Sat Jul 16 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -120,11 +122,15 @@ router bgp 101
   network 101.101.101.101 mask 255.255.255.255
   no neighbor 2001:101:14:22::1 activate
   neighbor 101.0.0.14 activate
+  neighbor 101.0.0.14 default-originate
+  neighbor 101.0.0.14 prefix-list PL-DEFAULT out
   neighbor 192.168.0.21 activate
  exit-address-family
  !
  address-family ipv6
   neighbor 2001:101:14:22::1 activate
+  neighbor 2001:101:14:22::1 default-originate
+  neighbor 2001:101:14:22::1 prefix-list PL-DEFAULT-IPV6 out
   neighbor 192.168.0.21 activate
  exit-address-family
 !
@@ -135,6 +141,10 @@ no ip http server
 no ip http secure-server
 !
 !
+ip prefix-list PL-DEFAULT seq 5 deny 0.0.0.0/0
+!
+!
+ipv6 prefix-list PL-DEFAULT-IPV6 seq 5 deny ::/0
 !
 !
 control-plane
