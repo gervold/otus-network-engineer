@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 21:25:19 EET Thu Jul 14 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
