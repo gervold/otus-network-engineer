@@ -70,8 +70,7 @@ interface Ethernet0/0
 !
 interface Ethernet0/1
  no shutdown
- no ip address
- shutdown
+ ip address 30.4.5.1 255.255.255.252
 !
 interface Ethernet0/2
  no shutdown
@@ -80,8 +79,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
- no ip address
- shutdown
+ ip address 30.4.6.1 255.255.255.252
 !
 interface Ethernet1/0
  no shutdown
