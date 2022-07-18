@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 00:29:00 EET Mon Jul 18 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -77,24 +79,32 @@ interface Loopback2
 interface Ethernet0/0
  no shutdown
  ip address 10.0.1.18 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::18 link-local
  ipv6 address 2001:0:16:18::2/64
 !
 interface Ethernet0/1
  no shutdown
  ip address 10.0.0.18 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ipv6 address FE80::18 link-local
  ipv6 address 2001:0:17:18::2/64
 !
 interface Ethernet0/2
  no shutdown
  ip address 52.0.1.18 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
  ipv6 address FE80::18 link-local
  ipv6 address 2001:520:18:24::1/64
 !
 interface Ethernet0/3
  no shutdown
  ip address 52.0.2.18 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
  ipv6 address FE80::18 link-local
  ipv6 address 2001:520:18:26::1/64
 !
@@ -127,8 +137,7 @@ router bgp 2042
  neighbor 52.0.2.26 remote-as 520
  !
  address-family ipv4
-  network 200.0.0.0
-  network 200.0.1.0
+  network 204.2.0.0 mask 255.255.255.248
   no neighbor 2001:520:18:24::2 activate
   no neighbor 2001:520:18:26::2 activate
   neighbor 52.0.1.24 activate
@@ -150,6 +159,8 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip nat pool NAT-POOL-SPB 204.2.0.1 204.2.0.5 netmask 255.255.255.248
+ip nat inside source list 1 pool NAT-POOL-SPB overload
 ip route 0.0.0.0 0.0.0.0 52.0.1.24
 ip route 0.0.0.0 0.0.0.0 52.0.2.26
 !
@@ -158,6 +169,7 @@ ip prefix-list PL-NO-TRANSIT seq 5 permit 200.0.0.0/24
 ip prefix-list PL-NO-TRANSIT seq 10 permit 200.0.1.0/24
 !
 !
+access-list 1 permit 200.0.0.0 0.0.255.255
 !
 control-plane
 !
