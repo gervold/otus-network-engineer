@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 00:22:32 EET Mon Jul 18 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -75,6 +77,8 @@ interface Loopback1
 interface Ethernet0/0
  no shutdown
  ip address 10.0.2.14 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 10
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:12:14::2/64
@@ -83,6 +87,8 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  ip address 10.0.1.14 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 10
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:13:14::2/64
@@ -91,12 +97,16 @@ interface Ethernet0/1
 interface Ethernet0/2
  no shutdown
  ip address 101.0.0.14 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
  ipv6 address FE80::14 link-local
  ipv6 address 2001:101:14:22::1/64
 !
 interface Ethernet0/3
  no shutdown
  ip address 10.0.3.14 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 101
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:14:19::1/64
@@ -143,7 +153,7 @@ router bgp 1001
  neighbor 101.0.0.22 remote-as 101
  !
  address-family ipv4
-  network 100.0.0.0 mask 255.255.255.0
+  network 100.1.100.0 mask 255.255.255.252
   neighbor 15.15.15.15 activate
   neighbor 15.15.15.15 next-hop-self
   no neighbor 2001:101:14:22::2 activate
@@ -164,6 +174,8 @@ ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
+ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
+ip nat inside source list 1 pool NAT-POOL-MSK overload
 !
 ipv6 router ospf 1
  router-id 14.14.14.14
@@ -175,6 +187,7 @@ route-map AS-PREP permit 10
  set as-path prepend 1001 1001 1001 1001 1001
 !
 !
+access-list 1 permit 100.0.0.0 0.0.255.255
 !
 control-plane
 !
