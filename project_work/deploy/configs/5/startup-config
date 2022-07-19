@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 00:40:22 EET Tue Jul 19 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -73,12 +71,19 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
- ip address 2.0.0.1 255.255.255.252
+ ip address 5.5.5.1 255.255.255.0
 !
 interface Ethernet0/3
  no shutdown
  no ip address
  shutdown
+!
+router bgp 5
+ bgp router-id 5.5.5.5
+ bgp log-neighbor-changes
+ network 5.5.5.0 mask 255.255.255.0
+ neighbor 30.4.5.1 remote-as 4
+ neighbor 30.5.11.2 remote-as 100
 !
 ip forward-protocol nd
 !

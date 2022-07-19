@@ -60,6 +60,10 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 100.100.100.100 255.255.255.255
+!
 !
 interface Ethernet0/0
  no shutdown
@@ -79,6 +83,11 @@ interface Ethernet0/3
  no shutdown
  no ip address
  shutdown
+!
+router bgp 100
+ bgp router-id 11.11.11.11
+ network 100.100.100.100 mask 255.255.255.255
+ neighbor 30.5.11.1 remote-as 5
 !
 ip forward-protocol nd
 !
