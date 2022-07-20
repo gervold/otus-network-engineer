@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 00:33:39 EET Tue Jul 19 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -63,9 +61,13 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 100.100.100.100 255.255.255.255
+!
 interface Ethernet0/0
  no shutdown
- no ip address
+ ip address 30.7.9.2 255.255.255.252
  shutdown
 !
 interface Ethernet0/1
