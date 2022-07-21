@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:51:56 EET Thu Jul 21 2022
+! Last configuration change at 00:48:08 EET Fri Jul 22 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -63,6 +63,10 @@ redundancy
 !
 !
 !
+interface Null0
+ no shutdown
+ no ip unreachables
+!
 interface Ethernet0/0
  no shutdown
  no ip address
@@ -106,13 +110,25 @@ router bgp 7
  network 7.7.7.0 mask 255.255.255.0
  neighbor 30.7.8.2 remote-as 8
  neighbor 30.7.9.2 remote-as 100
+ neighbor 30.7.9.2 ebgp-multihop 255
+ neighbor 30.7.9.2 route-map customer-in in
 !
 ip forward-protocol nd
 !
+ip bgp-community new-format
+ip community-list 10 permit 64500:666
 !
 no ip http server
 no ip http secure-server
+ip route 172.16.6.6 255.255.255.255 Null0
 !
+!
+route-map customer-in permit 10
+ match community 10
+ set community no-export
+ set ip next-hop 172.16.6.6
+!
+route-map customer-in permit 20
 !
 !
 !

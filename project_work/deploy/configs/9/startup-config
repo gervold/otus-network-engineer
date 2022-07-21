@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:46:50 EET Thu Jul 21 2022
+! Last configuration change at 01:06:10 EET Fri Jul 22 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -67,6 +67,14 @@ interface Loopback0
  no shutdown
  ip address 100.100.100.100 255.255.255.255
 !
+interface Loopback1
+ no shutdown
+ ip address 200.200.200.200 255.255.255.255
+!
+interface Null0
+ no shutdown
+ no ip unreachables
+!
 interface Ethernet0/0
  no shutdown
  ip address 30.7.9.2 255.255.255.252
@@ -89,15 +97,22 @@ interface Ethernet0/3
 router bgp 100
  bgp router-id 9.9.9.9
  bgp log-neighbor-changes
- network 100.100.100.100 mask 255.255.255.255
+ network 100.100.100.100 mask 255.255.255.255 route-map blackhole
+ network 200.200.200.200 mask 255.255.255.255
  neighbor 30.7.9.1 remote-as 7
+ neighbor 30.7.9.1 send-community
 !
 ip forward-protocol nd
 !
+ip bgp-community new-format
 !
 no ip http server
 no ip http secure-server
+ip route 100.100.100.100 255.255.255.255 Null0
 !
+!
+route-map blackhole permit 10
+ set community 64500:666
 !
 !
 !
