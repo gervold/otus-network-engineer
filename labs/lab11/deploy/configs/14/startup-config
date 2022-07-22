@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 14:51:58 EET Sat Jul 16 2022
+! Last configuration change at 13:12:03 EET Fri Jul 22 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -150,6 +150,7 @@ router bgp 1001
   neighbor 15.15.15.15 next-hop-self
   no neighbor 2001:101:14:22::2 activate
   neighbor 101.0.0.22 activate
+  neighbor 101.0.0.22 prefix-list PL-DEFAULT in
   neighbor 101.0.0.22 route-map AS-PREP out
   neighbor 101.0.0.22 filter-list 1 out
  exit-address-family
@@ -167,6 +168,9 @@ ip as-path access-list 1 deny .*
 no ip http server
 no ip http secure-server
 !
+!
+ip prefix-list PL-DEFAULT seq 5 permit 0.0.0.0/0
+ip prefix-list PL-DEFAULT seq 10 deny 0.0.0.0/0 ge 1
 ipv6 router ospf 1
  router-id 14.14.14.14
  area 101 stub no-summary
