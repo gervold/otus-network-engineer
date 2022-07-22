@@ -6,8 +6,8 @@ LAB_PATH='/opt/unetlab/tmp/0/12b5791b-53bd-40ba-9afd-ef0c1542b4a7'
 LAB_FILE='/opt/unetlab/labs/project_work/project.unl'
 
 #root@eve-ng:~# ls /opt/unetlab/tmp/0/12b5791b-53bd-40ba-9afd-ef0c1542b4a7
-#1  10  11  12  13  14  15  2  3  4  5  6  7  8  9
-devices=(1  10  11  12  13  14  15  2  3  4  5  6  7  8  9)
+#1  10  11  12  13  14  15  16  17  2  3  4  5  6  7  8  9
+devices=(1  10  11  12  13  14  15  16  17  2  3  4  5  6  7  8  9)
 
 echo "export configs"
 ssh $USER@$HOST "/opt/unetlab/wrappers/unl_wrapper -a export -F $LAB_FILE -T 0"
