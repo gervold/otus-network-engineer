@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 02:25:22 EET Mon Jul 25 2022
+! Last configuration change at 02:35:22 EET Mon Jul 25 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -97,7 +97,7 @@ interface Ethernet0/3
 router bgp 100
  bgp router-id 9.9.9.9
  bgp log-neighbor-changes
- network 100.100.100.100 mask 255.255.255.255 route-map prepend5
+ network 100.100.100.100 mask 255.255.255.255 route-map no_export
  network 200.200.200.200 mask 255.255.255.255
  neighbor 30.7.9.1 remote-as 7
  neighbor 30.7.9.1 send-community
@@ -110,6 +110,9 @@ no ip http server
 no ip http secure-server
 !
 !
+route-map no_advertise permit 10
+ set community no-advertise
+!
 route-map prepend1 permit 10
  set community 100:1
 !
@@ -118,6 +121,9 @@ route-map prepend3 permit 10
 !
 route-map prepend5 permit 10
  set community 100:5
+!
+route-map no_export permit 10
+ set community no-export
 !
 route-map blackhole permit 10
  set community 64500:666
