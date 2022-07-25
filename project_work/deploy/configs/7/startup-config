@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:48:08 EET Fri Jul 22 2022
+! Last configuration change at 02:24:08 EET Mon Jul 25 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -117,6 +117,9 @@ ip forward-protocol nd
 !
 ip bgp-community new-format
 ip community-list 10 permit 64500:666
+ip community-list 11 permit 100:1
+ip community-list 13 permit 100:3
+ip community-list 15 permit 100:5
 !
 no ip http server
 no ip http secure-server
@@ -127,6 +130,18 @@ route-map customer-in permit 10
  match community 10
  set community no-export
  set ip next-hop 172.16.6.6
+!
+route-map customer-in permit 11
+ match community 11
+ set as-path prepend 100
+!
+route-map customer-in permit 13
+ match community 13
+ set as-path prepend 100 100 100
+!
+route-map customer-in permit 15
+ match community 15
+ set as-path prepend 100 100 100 100 100
 !
 route-map customer-in permit 20
 !
