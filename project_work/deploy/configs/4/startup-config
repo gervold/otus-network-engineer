@@ -107,8 +107,10 @@ router bgp 4
  bgp router-id 4.4.4.4
  bgp log-neighbor-changes
  network 4.4.4.4 mask 255.255.255.255
+ neighbor 20.3.4.1 remote-as 3
  neighbor 30.4.5.2 remote-as 5
  neighbor 30.4.6.2 remote-as 6
+ neighbor 30.4.7.2 remote-as 7
 !
 ip forward-protocol nd
 !

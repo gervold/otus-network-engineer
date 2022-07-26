@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 09:31:58 EET Fri Jul 22 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -62,16 +60,17 @@ redundancy
 !
 !
 !
+interface Loopback0
+ no shutdown
+ ip address 100.100.100.100 255.255.255.255
 !
 interface Ethernet0/0
  no shutdown
- no ip address
- shutdown
+ ip address 30.16.17.2 255.255.255.0
 !
 interface Ethernet0/1
  no shutdown
- no ip address
- shutdown
+ ip address 30.2.17.2 255.255.255.0
 !
 interface Ethernet0/2
  no shutdown
@@ -82,6 +81,13 @@ interface Ethernet0/3
  no shutdown
  no ip address
  shutdown
+!
+router bgp 17
+ bgp router-id 17.17.17.17
+ bgp log-neighbor-changes
+ network 17.17.17.17 mask 255.255.255.255
+ neighbor 30.2.17.1 remote-as 2
+ neighbor 30.16.17.1 remote-as 100
 !
 ip forward-protocol nd
 !

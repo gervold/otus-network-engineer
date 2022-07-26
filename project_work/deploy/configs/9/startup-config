@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 02:35:22 EET Mon Jul 25 2022
+! Last configuration change at 11:23:47 EET Tue Jul 26 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -97,7 +97,7 @@ interface Ethernet0/3
 router bgp 100
  bgp router-id 9.9.9.9
  bgp log-neighbor-changes
- network 100.100.100.100 mask 255.255.255.255 route-map no_export
+ network 100.100.100.100 mask 255.255.255.255 route-map prepend5
  network 200.200.200.200 mask 255.255.255.255
  neighbor 30.7.9.1 remote-as 7
  neighbor 30.7.9.1 send-community
