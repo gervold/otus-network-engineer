@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:29:00 EET Mon Jul 18 2022
+! Last configuration change at 00:22:15 EET Fri Jul 29 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -163,10 +163,15 @@ ip nat pool NAT-POOL-SPB 204.2.0.1 204.2.0.5 netmask 255.255.255.248
 ip nat inside source list 1 pool NAT-POOL-SPB overload
 ip route 0.0.0.0 0.0.0.0 52.0.1.24
 ip route 0.0.0.0 0.0.0.0 52.0.2.26
+ip route 204.2.0.0 255.255.255.248 Null0
 !
+!
+ip prefix-list 1 seq 5 permit 52.0.1.0/24
 !
 ip prefix-list PL-NO-TRANSIT seq 5 permit 200.0.0.0/24
 ip prefix-list PL-NO-TRANSIT seq 10 permit 200.0.1.0/24
+ip prefix-list PL-NO-TRANSIT seq 15 permit 52.0.1.0/24
+ip prefix-list PL-NO-TRANSIT seq 20 permit 204.2.0.0/29
 !
 !
 access-list 1 permit 200.0.0.0 0.0.255.255
