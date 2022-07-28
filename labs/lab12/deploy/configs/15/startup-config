@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:53:36 EET Sun Jul 17 2022
+! Last configuration change at 01:14:25 EET Fri Jul 29 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -97,7 +97,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
- ip address 100.1.100.1 255.255.255.252 secondary
+ ip address 100.1.100.1 255.255.255.0 secondary
  ip address 30.0.0.15 255.255.255.0
  ip nat outside
  ip virtual-reassembly in
@@ -156,7 +156,7 @@ router bgp 1001
  neighbor 2001:301:15:21::2 remote-as 301
  !
  address-family ipv4
-  network 100.1.100.0 mask 255.255.255.252
+  network 100.1.100.0 mask 255.255.255.0
   neighbor 14.14.14.14 activate
   neighbor 14.14.14.14 next-hop-self
   neighbor 30.0.0.21 activate
@@ -178,6 +178,8 @@ no ip http server
 no ip http secure-server
 ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
 ip nat inside source list 1 pool NAT-POOL-MSK overload
+ip nat inside source static tcp 10.0.3.19 23 100.1.100.19 2023 extendable
+ip nat inside source static 10.0.3.20 100.1.100.20
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
 !
 !

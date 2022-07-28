@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 01:19:23 EET Fri Jul 29 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -124,8 +126,9 @@ line con 0
  logging synchronous
 line aux 0
 line vty 0 4
+ password sex
  login
- transport input none
+ transport input telnet
 !
 !
 end
