@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 00:22:32 EET Mon Jul 18 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -104,9 +102,10 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no shutdown
- ip address 10.0.3.14 255.255.255.0
+ ip address 10.0.4.14 255.255.255.0
  ip nat inside
  ip virtual-reassembly in
+ ip ospf network point-to-point
  ip ospf 1 area 101
  ipv6 address FE80::14 link-local
  ipv6 address 2001:0:14:19::1/64

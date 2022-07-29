@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 01:19:23 EET Fri Jul 29 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -73,7 +71,8 @@ interface Loopback0
 !
 interface Ethernet0/0
  no shutdown
- ip address 10.0.3.19 255.255.255.0
+ ip address 10.0.4.19 255.255.255.0
+ ip ospf network point-to-point
  ip ospf 1 area 101
  ipv6 address FE80::19 link-local
  ipv6 address 2001:0:14:19::2/64
