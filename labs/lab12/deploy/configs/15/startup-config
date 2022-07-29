@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 01:14:25 EET Fri Jul 29 2022
+! Last configuration change at 01:06:40 EET Sat Jul 30 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -117,6 +117,8 @@ interface Ethernet0/3
 interface Ethernet1/0
  no shutdown
  ip address 10.0.5.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
  ip ospf 1 area 0
  ipv6 address 2001:1001:14:15::2/64
  ipv6 ospf 1 area 0
@@ -178,7 +180,7 @@ no ip http server
 no ip http secure-server
 ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
 ip nat inside source list 1 pool NAT-POOL-MSK overload
-ip nat inside source static tcp 10.0.3.19 23 100.1.100.19 2023 extendable
+ip nat inside source static tcp 10.0.4.19 23 100.1.100.19 2023 extendable
 ip nat inside source static 10.0.3.20 100.1.100.20
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
 !
