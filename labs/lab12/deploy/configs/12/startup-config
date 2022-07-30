@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 02:14:22 EET Sat Jul 30 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -26,10 +28,23 @@ mmi snmp-timeout 180
 !
 !
 !
-
-
 !
+ip dhcp excluded-address 100.0.0.1 100.0.0.5
+ip dhcp excluded-address 100.0.1.1 100.0.1.5
+ip dhcp excluded-address 100.0.1.128 100.0.1.255
+ip dhcp excluded-address 100.0.0.128 100.0.0.255
 !
+ip dhcp pool LAN-1
+ network 100.0.0.0 255.255.255.0
+ default-router 100.0.0.1 
+ domain-name kolxoz.net
+ lease 2 0 5
+!
+ip dhcp pool LAN-2
+ network 100.0.1.0 255.255.255.0
+ default-router 100.0.1.1
+ domain-name kolxoz.net
+ lease 1 0 5
 !
 !
 ip cef

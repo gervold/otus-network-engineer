@@ -26,8 +26,21 @@ mmi snmp-timeout 180
 !
 !
 !
-
-
+!
+ip dhcp excluded-address 100.0.0.1 100.0.0.127
+ip dhcp excluded-address 100.0.1.1 100.0.1.127
+!
+ip dhcp pool LAN-1
+ network 100.0.0.0 255.255.255.0
+ default-router 100.0.0.1
+ domain-name kolxoz.net
+ lease 2 0 5
+!
+ip dhcp pool LAN-2
+ network 100.0.1.0 255.255.255.0
+ default-router 100.0.1.1
+ domain-name kolxoz.net
+ lease 1 0 5
 !
 !
 !
