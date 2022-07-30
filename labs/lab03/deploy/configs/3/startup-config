@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 16:58:14 EET Sat Jul 30 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -33,7 +35,8 @@ mmi snmp-timeout 180
 !
 !
 ip cef
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 cef
 !
 multilink bundle-name authenticated
 !
@@ -64,12 +67,14 @@ redundancy
 interface Ethernet0/0
  no shutdown
  no ip address
- shutdown
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:2::1/64
 !
 interface Ethernet0/1
  no shutdown
  no ip address
- shutdown
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:1::1/64
 !
 interface Ethernet0/2
  no shutdown
@@ -87,6 +92,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+ipv6 route ::/0 2001:DB8:ACAD:2::2
 !
 !
 !
