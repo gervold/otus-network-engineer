@@ -1,0 +1,218 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 15.15.15.15 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Loopback1
+ no shutdown
+ ip address 100.0.1.15 255.255.255.0
+ shutdown
+ ipv6 address 2001:1001:0:101::15/128
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.0.2.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 10
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:0:13:15::2/64
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.0.1.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 10
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:0:12:15::2/64
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 100.1.100.1 255.255.255.0 secondary
+ ip address 30.0.0.15 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:301:15:21::1/64
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 10.0.3.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 102
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:0:15:20::1/64
+ ipv6 ospf 1 area 102
+!
+interface Ethernet1/0
+ no shutdown
+ ip address 10.0.5.15 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 0
+ ipv6 address 2001:1001:14:15::2/64
+ ipv6 ospf 1 area 0
+!
+interface Ethernet1/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 15.15.15.15
+ area 102 filter-list prefix DENY-AREA-101 in
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
+ no passive-interface Ethernet0/3
+ no passive-interface Ethernet1/0
+ default-information originate
+!
+router bgp 1001
+ bgp router-id 30.0.0.15
+ bgp log-neighbor-changes
+ bgp default local-preference 300
+ neighbor 14.14.14.14 remote-as 1001
+ neighbor 14.14.14.14 update-source Loopback0
+ neighbor 30.0.0.21 remote-as 301
+ neighbor 2001:301:15:21::2 remote-as 301
+ !
+ address-family ipv4
+  network 100.1.100.0 mask 255.255.255.0
+  neighbor 14.14.14.14 activate
+  neighbor 14.14.14.14 next-hop-self
+  neighbor 30.0.0.21 activate
+  neighbor 30.0.0.21 filter-list 1 out
+  no neighbor 2001:301:15:21::2 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:1001:0:101::15/128
+  neighbor 2001:301:15:21::2 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
+ip nat inside source list 1 pool NAT-POOL-MSK overload
+ip nat inside source static tcp 10.0.4.19 23 100.1.100.19 2023 extendable
+ip nat inside source static 10.0.3.20 100.1.100.20
+ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
+!
+!
+ip prefix-list DENY-AREA-101 seq 5 deny 100.0.0.19/32
+ip prefix-list DENY-AREA-101 seq 100 permit 0.0.0.0/0 le 32
+ipv6 route ::/0 2001:1001:15:21::2 name default_to_lamas
+ipv6 router ospf 1
+ router-id 15.15.15.15
+ distribute-list prefix-list DENY-AREA-101-IPV6 in  
+ default-information originate
+!
+!
+!
+ipv6 prefix-list DENY-AREA-101-IPV6 seq 5 deny 2001:1001:0:100::19/128
+ipv6 prefix-list DENY-AREA-101-IPV6 seq 100 permit ::/0
+!
+access-list 1 permit 100.0.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
