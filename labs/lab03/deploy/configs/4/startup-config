@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 16:58:40 EET Sat Jul 30 2022
+! Last configuration change at 17:25:16 EET Sat Jul 30 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -75,6 +75,8 @@ interface Ethernet0/1
  no ip address
  ipv6 address FE80::1 link-local
  ipv6 address 2001:DB8:ACAD:3::1/64
+ ipv6 nd managed-config-flag
+ ipv6 dhcp relay destination 2001:DB8:ACAD:2::1 Ethernet0/0
 !
 interface Ethernet0/2
  no shutdown
