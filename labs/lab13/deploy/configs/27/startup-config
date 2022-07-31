@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 18:59:56 EET Sun Jul 31 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -84,6 +82,22 @@ interface Tunnel200
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
  tunnel key 200
+!
+interface Tunnel201
+ no shutdown
+ ip address 10.201.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map multicast 100.1.100.14
+ ip nhrp map 10.201.0.1 100.1.100.14
+ ip nhrp network-id 201
+ ip nhrp holdtime 600
+ ip nhrp nhs 10.201.0.1
+ ip nhrp shortcut
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/0
+ tunnel mode gre multipoint
+ tunnel key 201
 !
 interface Ethernet0/0
  no shutdown
