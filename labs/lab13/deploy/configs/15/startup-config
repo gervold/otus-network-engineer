@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 15:55:52 EET Sun Jul 31 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -96,6 +98,7 @@ interface Ethernet0/1
 interface Ethernet0/2
  no shutdown
  ip address 100.1.100.1 255.255.255.0 secondary
+ ip address 100.1.100.15 255.255.255.0 secondary
  ip address 30.0.0.15 255.255.255.0
  ip nat outside
  ip virtual-reassembly in
@@ -181,6 +184,7 @@ ip nat inside source list 1 pool NAT-POOL-MSK overload
 ip nat inside source static tcp 10.0.4.19 23 100.1.100.19 2023 extendable
 ip nat inside source static 10.0.3.20 100.1.100.20
 ip route 0.0.0.0 0.0.0.0 30.0.0.21 name default_to_lamas
+ip route 100.1.100.14 255.255.255.255 10.0.5.14
 !
 !
 ip prefix-list DENY-AREA-101 seq 5 deny 100.0.0.19/32

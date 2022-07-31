@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 15:55:14 EET Sun Jul 31 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -94,6 +96,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
+ ip address 100.1.100.14 255.255.255.0 secondary
  ip address 101.0.0.14 255.255.255.0
  ip nat outside
  ip virtual-reassembly in

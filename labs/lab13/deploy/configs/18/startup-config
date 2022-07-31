@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 16:04:26 EET Sun Jul 31 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -64,8 +66,7 @@ redundancy
 !
 interface Loopback1
  no shutdown
- ip address 200.0.0.18 255.255.255.0
- shutdown
+ ip address 204.2.0.18 255.255.255.0
  ipv6 address 2001:2024:0:200::18/128
 !
 interface Loopback2
@@ -135,7 +136,7 @@ router bgp 2042
  neighbor 52.0.2.26 remote-as 520
  !
  address-family ipv4
-  network 204.2.0.0 mask 255.255.255.248
+  network 204.2.0.0
   no neighbor 2001:520:18:24::2 activate
   no neighbor 2001:520:18:26::2 activate
   neighbor 52.0.1.24 activate
@@ -161,7 +162,7 @@ ip nat pool NAT-POOL-SPB 204.2.0.1 204.2.0.5 netmask 255.255.255.248
 ip nat inside source list 1 pool NAT-POOL-SPB overload
 ip route 0.0.0.0 0.0.0.0 52.0.1.24
 ip route 0.0.0.0 0.0.0.0 52.0.2.26
-ip route 204.2.0.0 255.255.255.248 Null0
+ip route 204.2.0.0 255.255.255.0 Null0
 !
 !
 ip prefix-list 1 seq 5 permit 52.0.1.0/24
@@ -169,7 +170,7 @@ ip prefix-list 1 seq 5 permit 52.0.1.0/24
 ip prefix-list PL-NO-TRANSIT seq 5 permit 200.0.0.0/24
 ip prefix-list PL-NO-TRANSIT seq 10 permit 200.0.1.0/24
 ip prefix-list PL-NO-TRANSIT seq 15 permit 52.0.1.0/24
-ip prefix-list PL-NO-TRANSIT seq 20 permit 204.2.0.0/29
+ip prefix-list PL-NO-TRANSIT seq 20 permit 204.2.0.0/24
 !
 !
 access-list 1 permit 200.0.0.0 0.0.255.255
