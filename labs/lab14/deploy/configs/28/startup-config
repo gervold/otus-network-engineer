@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 22:11:30 EET Sun Jul 31 2022
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -59,6 +57,22 @@ redundancy
 !
 !
 !
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key OLOLOLO address 100.1.100.14
+crypto isakmp key OLOLOLO address 100.1.100.15
+crypto isakmp key OLOLOLO address 52.0.5.27
+!
+!
+crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile PROTECT-GRE
+ set transform-set GRE-IPSEC
+!
+!
 !
 !
 !
@@ -77,6 +91,7 @@ interface Tunnel200
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
  tunnel key 200
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Tunnel201
  no shutdown
@@ -85,13 +100,14 @@ interface Tunnel201
  ip mtu 1400
  ip nhrp map multicast 100.1.100.14
  ip nhrp map 10.201.0.1 100.1.100.14
- ip nhrp network-id 200
+ ip nhrp network-id 201
  ip nhrp holdtime 600
  ip nhrp nhs 10.201.0.1
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/1
  tunnel mode gre multipoint
  tunnel key 201
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Ethernet0/0
  no shutdown

@@ -58,6 +58,21 @@ redundancy
 !
 !
 !
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key OLOLOLO address 100.1.100.14
+crypto isakmp key OLOLOLO address 100.1.100.15
+crypto isakmp key OLOLOLO address 52.0.4.28
+!
+!
+crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile PROTECT-GRE
+ set transform-set GRE-IPSEC
+!
 !
 !
 !
@@ -80,6 +95,7 @@ interface Tunnel200
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
  tunnel key 200
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Tunnel201
  no shutdown
@@ -94,6 +110,7 @@ interface Tunnel201
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
  tunnel key 201
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Ethernet0/0
  no shutdown
