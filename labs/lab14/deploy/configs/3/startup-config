@@ -1,0 +1,123 @@
+
+!
+! Last configuration change at 21:57:03 EET Sun Jul 31 2022
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+vtp mode transparent
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name General
+!
+vlan 70
+ name Accounting
+!
+vlan 1000
+ name Management
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ switchport trunk allowed vlan 10,70,1000
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ no shutdown
+ switchport trunk allowed vlan 10,70,1000
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ no shutdown
+ switchport access vlan 10
+ switchport mode access
+!
+interface Ethernet0/3
+ no shutdown
+ shutdown
+!
+interface Ethernet1/0
+ no shutdown
+ shutdown
+!
+interface Ethernet1/1
+ no shutdown
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ shutdown
+!
+interface Vlan1000
+ no shutdown
+ ip address 172.16.0.3 255.255.255.0
+ ipv6 address 2001:1001:0:172::3/64
+!
+ip default-gateway 172.16.0.1
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

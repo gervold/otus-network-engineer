@@ -1,0 +1,209 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R18
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no shutdown
+ ip address 204.2.0.18 255.255.255.0
+ ipv6 address 2001:2024:0:200::18/128
+!
+interface Loopback2
+ no shutdown
+ ip address 200.0.1.18 255.255.255.0
+ shutdown
+ ipv6 address 2001:2024:0:201::18/128
+!
+interface Tunnel100
+ no shutdown
+ ip address 10.100.0.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 204.2.0.18
+ tunnel destination 100.1.100.15
+!
+interface Tunnel101
+ no shutdown
+ ip address 10.100.1.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 204.2.0.18
+ tunnel destination 100.1.100.14
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.0.1.18 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:0:16:18::2/64
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.0.0.18 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:0:17:18::2/64
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 52.0.1.18 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:520:18:24::1/64
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 52.0.2.18 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:520:18:26::1/64
+!
+!
+router eigrp SPB-NET
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+  network 10.0.0.18 0.0.0.0
+  network 10.0.1.18 0.0.0.0
+  eigrp router-id 18.18.18.18
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  topology base
+  exit-af-topology
+ exit-address-family
+!
+router bgp 2042
+ bgp router-id 52.0.1.18
+ bgp log-neighbor-changes
+ bgp bestpath as-path multipath-relax
+ neighbor 2001:520:18:24::2 remote-as 520
+ neighbor 2001:520:18:26::2 remote-as 520
+ neighbor 52.0.1.24 remote-as 520
+ neighbor 52.0.2.26 remote-as 520
+ !
+ address-family ipv4
+  network 204.2.0.0
+  no neighbor 2001:520:18:24::2 activate
+  no neighbor 2001:520:18:26::2 activate
+  neighbor 52.0.1.24 activate
+  neighbor 52.0.1.24 prefix-list PL-NO-TRANSIT out
+  neighbor 52.0.2.26 activate
+  neighbor 52.0.2.26 prefix-list PL-NO-TRANSIT out
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:2024:0:200::18/128
+  network 2001:2024:0:201::18/128
+  neighbor 2001:520:18:24::2 activate
+  neighbor 2001:520:18:26::2 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool NAT-POOL-SPB 204.2.0.1 204.2.0.5 netmask 255.255.255.248
+ip nat inside source list 1 pool NAT-POOL-SPB overload
+ip route 0.0.0.0 0.0.0.0 52.0.1.24
+ip route 0.0.0.0 0.0.0.0 52.0.2.26
+ip route 204.2.0.0 255.255.255.0 Null0
+!
+!
+ip prefix-list 1 seq 5 permit 52.0.1.0/24
+!
+ip prefix-list PL-NO-TRANSIT seq 5 permit 200.0.0.0/24
+ip prefix-list PL-NO-TRANSIT seq 10 permit 200.0.1.0/24
+ip prefix-list PL-NO-TRANSIT seq 15 permit 52.0.1.0/24
+ip prefix-list PL-NO-TRANSIT seq 20 permit 204.2.0.0/24
+!
+!
+access-list 1 permit 200.0.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
