@@ -22,6 +22,11 @@
 
 <summary> Минимальная настройка </summary>
 
+
+```
+network 0.0.0.0 255.255.255.255 area 0
+```
+
 ```
 router ospf 1
  router-id 15.15.15.15
