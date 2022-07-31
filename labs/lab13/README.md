@@ -203,7 +203,7 @@ Packet sent with a source address of 100.1.100.15
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 ```
 
-Объединять в виртуальную сеть будем следующим образом:
+Объединять в виртуальную сеть будем следующим образом (для роутеров указаны connected-интерфейсы и роли):
 
 Офис в Москве - `HUB`:
 ```
@@ -221,27 +221,21 @@ R27: 52.0.5.27
 R28: 52.0.4.28, 52.0.3.28
 ```
 
-Настроим R15:
+Настроим R15 с ролью `HUB`:
 
 ```
-conf t
-!
 interface Tunnel200
+ no shutdown
  ip address 10.200.0.1 255.255.255.0
  no ip redirects
  ip mtu 1400
- 
  ip nhrp map multicast dynamic
  ip nhrp network-id 200
- ip nhrp holdtime 600
- ip nhrp redirect
- 
  ip tcp adjust-mss 1360
  tunnel source 100.1.100.15
  tunnel mode gre multipoint
  tunnel key 200
- exit
-exit
+!
 ```
 
 `tunnel key` необходимо задать так как в Лабытнангах оба тунеля приземляются в один интерфейс.
@@ -251,7 +245,6 @@ R14 настраиваем аналогично.
 Настроим R27 с ролью `SPOKE`:
 
 ```
-!
 interface Tunnel200
  no shutdown
  ip address 10.200.0.3 255.255.255.0
@@ -260,9 +253,7 @@ interface Tunnel200
  ip nhrp map multicast 100.1.100.15
  ip nhrp map 10.200.0.1 100.1.100.15
  ip nhrp network-id 200
- ip nhrp holdtime 600
  ip nhrp nhs 10.200.0.1
- ip nhrp shortcut
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
@@ -276,9 +267,7 @@ interface Tunnel201
  ip nhrp map multicast 100.1.100.14
  ip nhrp map 10.201.0.1 100.1.100.14
  ip nhrp network-id 201
- ip nhrp holdtime 600
  ip nhrp nhs 10.201.0.1
- ip nhrp shortcut
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
