@@ -88,7 +88,6 @@ interface Tunnel201
  ip nhrp network-id 200
  ip nhrp holdtime 600
  ip nhrp nhs 10.201.0.1
- ip nhrp shortcut
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/1
  tunnel mode gre multipoint

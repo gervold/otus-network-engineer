@@ -83,13 +83,9 @@ interface Tunnel101
 interface Tunnel201
  no shutdown
  ip address 10.201.0.1 255.255.255.0
- no ip redirects
  ip mtu 1400
- ip bandwidth-percent eigrp 200 30
  ip nhrp map multicast dynamic
  ip nhrp network-id 200
- ip nhrp holdtime 600
- ip nhrp redirect
  ip tcp adjust-mss 1360
  tunnel source 100.1.100.14
  tunnel mode gre multipoint
