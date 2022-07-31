@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 16:04:26 EET Sun Jul 31 2022
+! Last configuration change at 16:40:34 EET Sun Jul 31 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -74,6 +74,22 @@ interface Loopback2
  ip address 200.0.1.18 255.255.255.0
  shutdown
  ipv6 address 2001:2024:0:201::18/128
+!
+interface Tunnel100
+ no shutdown
+ ip address 10.100.0.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 204.2.0.18
+ tunnel destination 100.1.100.15
+!
+interface Tunnel101
+ no shutdown
+ ip address 10.100.1.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 204.2.0.18
+ tunnel destination 100.1.100.14
 !
 interface Ethernet0/0
  no shutdown
