@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 23:34:16 EET Sun Jul 31 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -54,7 +56,18 @@ redundancy
 !
 !
 !
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key OLOLOLO address 100.1.100.15   
 !
+!
+crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac 
+ mode transport
+!
+crypto ipsec profile PROTECT-GRE
+ set transform-set GRE-IPSEC 
 !
 !
 !
@@ -80,6 +93,7 @@ interface Tunnel100
  ip tcp adjust-mss 1360
  tunnel source 204.2.0.18
  tunnel destination 100.1.100.15
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Tunnel101
  no shutdown
