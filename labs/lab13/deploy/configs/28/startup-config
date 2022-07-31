@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 18:18:55 EET Sun Jul 31 2022
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -111,6 +113,8 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 100.1.100.14 255.255.255.255 52.0.4.25
+ip route 100.1.100.15 255.255.255.255 52.0.3.26
 !
 ip access-list extended ACL-VPC30
  permit ip host 5.0.0.30 any
