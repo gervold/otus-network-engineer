@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 20:25:43 EET Sun Jul 31 2022
+! Last configuration change at 22:11:30 EET Sun Jul 31 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -72,9 +72,7 @@ interface Tunnel200
  ip nhrp map multicast 100.1.100.15
  ip nhrp map 10.200.0.1 100.1.100.15
  ip nhrp network-id 200
- ip nhrp holdtime 600
  ip nhrp nhs 10.200.0.1
- ip nhrp shortcut
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
@@ -90,7 +88,6 @@ interface Tunnel201
  ip nhrp network-id 200
  ip nhrp holdtime 600
  ip nhrp nhs 10.201.0.1
- ip nhrp shortcut
  ip tcp adjust-mss 1360
  tunnel source Ethernet0/1
  tunnel mode gre multipoint
