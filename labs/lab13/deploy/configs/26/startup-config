@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:59:33 EET Sun Jul 31 2022
+! Last configuration change at 22:00:20 EET Sun Jul 31 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -145,6 +145,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 52.0.5.27 255.255.255.255 52.0.5.25
 !
 !
 !

@@ -142,6 +142,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
+ip route 52.0.5.27 255.255.255.255 52.0.4.25
 ip route 100.1.100.14 255.255.255.255 52.0.4.25
 ip route 100.1.100.15 255.255.255.255 52.0.3.26
 !
