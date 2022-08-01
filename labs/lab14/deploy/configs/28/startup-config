@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:52:18 EET Mon Aug 1 2022
+! Last configuration change at 21:23:18 EET Mon Aug 1 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -34,6 +34,7 @@ mmi snmp-timeout 180
 !
 !
 !
+ip domain name kolxoz.net
 ip cef
 ipv6 unicast-routing
 ipv6 cef
@@ -46,7 +47,16 @@ multilink bundle-name authenticated
 !
 !
 !
+crypto pki trustpoint VPN
+ enrollment url http://100.1.100.15:80
+ subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
+ revocation-check none
+ rsakeypair VPN
 !
+!
+crypto pki certificate chain VPN
+ certificate 02 nvram:CA#2.cer
+ certificate ca 01 nvram:CA#1CA.cer
 !
 redundancy
 !
@@ -57,10 +67,10 @@ redundancy
 !
 !
 crypto isakmp policy 10
- authentication rsa-sig
 !
 !
-crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac
+crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac 
+ mode tunnel
 !
 crypto ipsec profile PROTECT-GRE
  set transform-set GRE-IPSEC 
@@ -84,6 +94,7 @@ interface Tunnel200
  tunnel source Ethernet0/0
  tunnel mode gre multipoint
  tunnel key 200
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Tunnel201
  no shutdown

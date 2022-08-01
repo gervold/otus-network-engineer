@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 01:18:54 EET Mon Aug 1 2022
+! Last configuration change at 21:23:58 EET Mon Aug 1 2022
 !
 version 15.4
 service timestamps debug datetime msec
@@ -34,6 +34,7 @@ mmi snmp-timeout 180
 !
 !
 !
+ip domain name kolxoz.net
 ip cef
 ipv6 unicast-routing
 no ipv6 cef
@@ -46,7 +47,25 @@ multilink bundle-name authenticated
 !
 !
 !
+crypto pki server CA
+ no database archive
 !
+crypto pki trustpoint CA
+ revocation-check crl
+ rsakeypair CA
+!
+crypto pki trustpoint VPN
+ enrollment url http://100.1.100.15:80
+ subject-name CN=R15,OU=Moscow,O=Kolxoz,C=RU
+ revocation-check none
+ rsakeypair VPN
+!
+!
+crypto pki certificate chain CA
+ certificate ca 01 nvram:CA#1CA.cer
+crypto pki certificate chain VPN
+ certificate 03 nvram:CA#3.cer
+ certificate ca 01 nvram:CA#1CA.cer
 !
 redundancy
 !
@@ -57,10 +76,10 @@ redundancy
 !
 !
 crypto isakmp policy 10
- authentication rsa-sig
 !
 !
-crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac
+crypto ipsec transform-set GRE-IPSEC esp-3des esp-sha-hmac 
+ mode tunnel
 !
 crypto ipsec profile PROTECT-GRE
  set transform-set GRE-IPSEC 
@@ -101,6 +120,7 @@ interface Tunnel200
  tunnel source 100.1.100.15
  tunnel mode gre multipoint
  tunnel key 200
+ tunnel protection ipsec profile PROTECT-GRE
 !
 interface Ethernet0/0
  no shutdown
@@ -204,7 +224,7 @@ ip forward-protocol nd
 ip as-path access-list 1 permit ^$
 ip as-path access-list 1 deny .*
 !
-no ip http server
+ip http server
 no ip http secure-server
 ip nat pool NAT-POOL-MSK 100.1.100.1 100.1.100.1 netmask 255.255.255.252
 ip nat inside source list 1 pool NAT-POOL-MSK overload
