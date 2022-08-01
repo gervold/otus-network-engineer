@@ -223,11 +223,7 @@ Peer: 52.0.5.27 port 500
 1. Настроить центр сертификации (`CA`)
 2. Послать запросы на выдачу сертификатов и выписать сертификаты
 3. Настроить на роутерах работу `IPSec` через сертификаты
-
-
-Определим следующие роли:
-- R15 – `CA` + участник сети
-- R27, R28 – рядовые участники сети.
+4. Проверить, что все работает
 
 Параметры сертификатов:
 ```
@@ -239,7 +235,7 @@ subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
 #### Настройка центра сертификации
 
 #### Настройка CA
-На R15 выполним:
+Роль `CA` будет выполнять роутер R15. Выполним:
 
 ```
 ip domain-lookup
@@ -254,26 +250,27 @@ password:OLOLOLOL
 
 #### Настройка клиента и запрос сертификата
 
-На обоих маршрутизаторах R27, R28, R15 выполнить:
-```
-R27(config)#ip domain-lookup
-R27(config)#ip domain-name kolxoz.net
+На всех маршрутизаторах, участвующих в `VPN`, выполнить (отличие в `subject-name`):
 
-R27(config)#crypto key generate rsa label VPN modulus 2048
+```
+R28(config)#ip domain-lookup
+R28(config)#ip domain-name kolxoz.net
+
+R28(config)#crypto key generate rsa label VPN modulus 2048
 ```
 Настройка `trust point`:
 ```
-R27(config)#crypto pki trustpoint VPN
-R27(ca-trustpoint)#enrollment url http://100.1.100.15
-R27(ca-trustpoint)#subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
-R27(ca-trustpoint)#rsakeypair VPN
-R27(ca-trustpoint)#revocation-check none
-R27(ca-trustpoint)#exit
+R28(config)#crypto pki trustpoint VPN
+R28(ca-trustpoint)#enrollment url http://100.1.100.15
+R28(ca-trustpoint)#subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
+R28(ca-trustpoint)#rsakeypair VPN
+R28(ca-trustpoint)#revocation-check none
+R28(ca-trustpoint)#exit
 ```
 
-Запросить запросить и проверить сертификат CA и запросить сертификат для себя:
+Запросить сертификат CA и проверить его, запросить сертификат для себя:
 ```
-R27(config)#crypto pki authenticate VPN
+R28(config)#crypto pki authenticate VPN
 Certificate has the following attributes:
        Fingerprint MD5: 282EA3CC AE4FE6E2 A1E9C0D0 C679758A
       Fingerprint SHA1: 36A18CDD 11712E02 352B17FB 33069A85 88EE8501
@@ -282,10 +279,8 @@ Certificate has the following attributes:
 Trustpoint CA certificate accepted.
 
 ```
-
-Запросить сертификат для маршрутизатора:
 ```
-R27(config)#crypto pki enroll VPN
+R28(config)#crypto pki enroll VPN
 ```
 После отправки запрос можно посмотреть на CA:
 ```
@@ -380,6 +375,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 5/5/6 ms
 ```
 
 Содержимое зашифровано:
+
 ![img_8.png](img_8.png)
 
 
