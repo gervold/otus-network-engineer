@@ -209,3 +209,179 @@ Peer: 52.0.5.27 port 500
 ```
 
 </details>
+
+### Настройка сертификатов
+
+Главный минус предыдущего подхода – необходимость предварительного распространения пароля.
+В случае большого и динамичеси меняющегося количество участников `DMVPN` сети (`SPOKE`-ов), ручное распространение паролей становится сложной задачей.
+
+Поэтому поднимем свой центр сертификации на `HUB`-роутере, при помощи которого будем выписывать сертификаты и выдавать их участникам сети.
+
+Далее, по выданным сертификатам, будет производиться авторизация участников сети.
+
+План:
+1. Настроить центр сертификации (`CA`)
+2. Послать запросы на выдачу сертификатов и выписать сертификаты
+3. Настроить на роутерах работу `IPSec` через сертификаты
+
+
+Определим следующие роли:
+- R15 – `CA` + участник сети
+- R27, R28 – рядовые участники сети.
+
+Параметры сертификатов:
+```
+subject-name CN=R15,OU=Moscow,O=Kolxoz,C=RU
+subject-name CN=R27,OU=Labintagi,O=Kolxoz,C=RU
+subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
+```
+
+#### Настройка центра сертификации
+
+#### Настройка CA
+На R15 выполним:
+
+```
+ip domain-lookup
+ip domain-name kolxoz.net
+
+ip http server
+crypto key generate rsa general-keys label CA exportable modulus 2048
+crypto pki server CA
+no shutdown
+password:OLOLOLOL
+```
+
+#### Настройка клиента и запрос сертификата
+
+На обоих маршрутизаторах R27, R28, R15 выполнить:
+```
+R27(config)#ip domain-lookup
+R27(config)#ip domain-name kolxoz.net
+
+R27(config)#crypto key generate rsa label VPN modulus 2048
+```
+Настройка `trust point`:
+```
+R27(config)#crypto pki trustpoint VPN
+R27(ca-trustpoint)#enrollment url http://100.1.100.15
+R27(ca-trustpoint)#subject-name CN=R28,OU=Chokhurdax,O=Kolxoz,C=RU
+R27(ca-trustpoint)#rsakeypair VPN
+R27(ca-trustpoint)#revocation-check none
+R27(ca-trustpoint)#exit
+```
+
+Запросить запросить и проверить сертификат CA и запросить сертификат для себя:
+```
+R27(config)#crypto pki authenticate VPN
+Certificate has the following attributes:
+       Fingerprint MD5: 282EA3CC AE4FE6E2 A1E9C0D0 C679758A
+      Fingerprint SHA1: 36A18CDD 11712E02 352B17FB 33069A85 88EE8501
+
+% Do you accept this certificate? [yes/no]: yes
+Trustpoint CA certificate accepted.
+
+```
+
+Запросить сертификат для маршрутизатора:
+```
+R27(config)#crypto pki enroll VPN
+```
+После отправки запрос можно посмотреть на CA:
+```
+R15#show crypto pki server CA request
+***
+Router certificates requests:
+ReqID  State      Fingerprint                      SubjectName
+--------------------------------------------------------------
+1      pending    8EF30F1B6264C558C44D58B768DAAEC6 hostname=R28.kolxoz.net,cn=R28,ou=Chokhurdax,o=Kolxoz,c=RU```
+```
+Подтвердить выпуск:
+```
+R15#crypto pki server CA grant 1
+```
+или 
+```
+crypto pki server CA grant all
+```
+После подтверждения запроса статус `pending` меняется на `granted`.
+```
+R15#show crypto pki server CA request
+Router certificates requests:
+ReqID  State      Fingerprint                      SubjectName
+--------------------------------------------------------------
+1      granted    8EF30F1B6264C558C44D58B768DAAEC6 hostname=R28.kolxoz.net,cn=R28,ou=Chokhurdax,o=Kolxoz,c=RU```
+```
+
+C запрашивающего маршрутизатора можно посмотреть полученный сертификат:
+
+<details>
+
+```
+R28#sh crypto pki certificates
+Certificate
+  Status: Available
+  Certificate Serial Number (hex): 02
+  Certificate Usage: General Purpose
+  Issuer:
+    cn=CA
+  Subject:
+    Name: R28.kolxoz.net
+    hostname=R28.kolxoz.net
+    cn=R28
+    ou=Chokhurdax
+    o=Kolxoz
+    c=RU
+  Validity Date:
+    start date: 21:14:02 EET Aug 1 2022
+    end   date: 21:14:02 EET Aug 1 2023
+  Associated Trustpoints: VPN
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer:
+    cn=CA
+  Subject:
+    cn=CA
+  Validity Date:
+    start date: 21:08:04 EET Aug 1 2022
+    end   date: 21:08:04 EET Jul 31 2025
+  Associated Trustpoints: VPN
+```
+</details>
+
+#### Настройка IPSec
+
+В целом далее настройки `IPSec` и применение профиля аналогичны описанным выше, но тип аутентификации меняется с `authentication pre-share` на `authentication rsa-sig`.
+
+(подробности в коммите)
+
+После применения настроек и выписывания сертификатов между (для примера R28 и R15) видно, что пиры теперь выглядят по другому:
+```
+R28#sh crypto isakmp peers
+Peer: 100.1.100.15 Port: 500 Local: 52.0.3.28
+ Phase1 id: R15.kolxoz.net
+```
+```
+R15#sh crypto isakmp peers
+Peer: 52.0.3.28 Port: 500 Local: 100.1.100.15
+ Phase1 id: R28.kolxoz.net
+```
+
+Связность не потерялась:
+```
+R15#ping 10.200.0.4
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.200.0.4, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 5/5/6 ms
+```
+
+Содержимое зашифровано:
+![img_8.png](img_8.png)
+
+
+
+
